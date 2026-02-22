@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Teasight Linear Dark Dashboard</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+        :root {
+            --bg-page: #0C0C0C;
+            --bg-card: #151516;
+            --bg-card-hover: #1c1c1f;
+            --border-subtle: #2C2C2E;
+            --text-primary: #EEEEEE;
+            --text-secondary: #8A8A8E;
+            --accent-primary: #8EFF33;--accent-glow: rgba(142, 255, 51, 0.25);
+            --accent-danger: #FF3333;--accent-neon-green: #39FF14;--accent-neon-orange: #FF4D4D;}
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .card:hover {
+            border-color: #3f3f42;
+        }
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: #000000;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            text-shadow: 0 0 10px rgba(255,255,255,0.4);
+            box-shadow: 0 0 20px rgba(142, 255, 51, 0.4);
+        }
+        .btn-primary:hover {
+            background-color: #76db2b;
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: var(--bg-page);
+            cursor: pointer;
+            margin-top: -10px; 
+            box-shadow: 0 0 0 1px var(--text-secondary);
+            border: 3px solid var(--accent-primary);
+            animation: thumb-pulse 2s infinite;
+        }
+        @keyframes thumb-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(142, 255, 51, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(142, 255, 51, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(142, 255, 51, 0); }
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #2C2C2E;
+            border-radius: 3px;
+        }
+        input[type=range]:focus::-webkit-slider-thumb {
+            box-shadow: 0 0 0 2px var(--accent-primary);
+        }
+        .bg-glow-gradient {
+            background: radial-gradient(circle at top right, rgba(142, 255, 51, 0.05), transparent 40%);
+        }
+        .bg-glow-danger {
+            background: radial-gradient(circle at top right, rgba(255, 51, 51, 0.1), transparent 50%);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-page); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-subtle); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f42; 
+        }@keyframes shimmer {
+            0% { transform: translateX(-150%) skewX(-15deg); }
+            50% { transform: translateX(150%) skewX(-15deg); }
+            100% { transform: translateX(150%) skewX(-15deg); }
+        }
+        .btn-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6), transparent);
+            transform: skewX(-15deg);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes fade-in-up {
+            0% { opacity: 0; transform: translateY(4px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in-up 0.6s ease-out forwards;
+        }
+        @keyframes progress-streak {
+            0% { left: -100%; opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { left: 200%; opacity: 0; }
+        }
+        .progress-streak {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            animation: progress-streak 1.5s infinite linear;
+        }
+        @keyframes sparkle-pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+        .sparkle {
+            animation: sparkle-pulse 2s infinite ease-in-out;
+        }
+        .hover-lift-glow {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .hover-lift-glow:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.4);
+            border-color: var(--accent-primary);
+        }
+        .hover-lift-glow:hover::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(to bottom, var(--accent-primary), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 1;
+            pointer-events: none;
+        }
+        .text-glow-danger-intense {
+            text-shadow: 0 0 40px rgba(255, 51, 51, 0.6), 0 0 10px rgba(255, 51, 51, 0.8);
+            color: var(--accent-danger);
+        }
+        .text-glow-neon-orange {
+            text-shadow: 0 0 30px rgba(255, 77, 77, 0.6);
+            color: var(--accent-neon-orange);
+        }
+        .text-glow-electric-green {
+            text-shadow: 0 0 20px rgba(57, 255, 20, 0.6);
+            color: var(--accent-neon-green);
+        }
+        .material-symbols-outlined.thick {
+            font-variation-settings: 'wght' 600;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-[var(--accent-primary)] selection:text-black">
+<header class="sticky top-0 z-50 w-full bg-[var(--bg-page)]/95 backdrop-blur-md border-b border-[var(--border-subtle)]">
+<div class="max-w-[1400px] mx-auto px-4 sm:px-6">
+<div class="flex h-20 items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-12 rounded-lg bg-[var(--accent-primary)] text-black relative group shadow-[0_0_15px_rgba(142,255,51,0.3)]">
+<span class="material-symbols-outlined thick text-[32px] relative z-10">emoji_nature</span>
+<div class="absolute inset-0 bg-white/30 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+</div>
+<div class="flex flex-col justify-center">
+<h1 class="text-3xl font-bold tracking-tight text-white leading-none">茶言觀色</h1>
+<span class="text-xs font-medium tracking-wide text-[var(--text-secondary)] uppercase mt-0.5">Teasight Dashboard</span>
+</div>
+<span class="ml-2 px-2 py-0.5 rounded text-xs font-bold bg-[var(--border-subtle)] text-[var(--text-secondary)] border border-white/5 tracking-wider self-start mt-1">BETA</span>
+</div>
+<div class="flex items-center gap-5">
+<button class="text-[var(--text-secondary)] hover:text-white transition-colors">
+<span class="material-symbols-outlined thick text-[28px]">search</span>
+</button>
+<button class="text-[var(--text-secondary)] hover:text-white transition-colors relative">
+<span class="material-symbols-outlined thick text-[28px]">notifications</span>
+<span class="absolute top-0 right-0 size-2.5 bg-[var(--accent-primary)] rounded-full animate-pulse ring-2 ring-[var(--bg-page)] shadow-[0_0_8px_var(--accent-primary)]"></span>
+</button>
+<div class="h-8 w-px bg-[var(--border-subtle)] mx-2"></div>
+<div class="flex items-center gap-3 pl-1 cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors">
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-[var(--border-subtle)]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCShpQ1UvfmS8A_98nJJRDF0leKZFEBsrem7ZszqqyBW6x_DBhF8DZkik2-xcs-o8jVZW215hnDqaBZH1Eo--hdvnpjdOv9xN9OPWEysDSvTsHXqAYkzZmhnhx-Vr4inDYevGKTLN9wZ0c4DXjSziMOq2vnbI7gLdvVF0-gvD-1bGpwq6ml5XBL7lz27HYfW7Vyhol1iY4QdcOtV2S-HjRLv_O3bZcH-KuqP8quhNBuAxTiKE9ktjPFQ3nz8viPmVJ9IOP5RMR6HMkN')"></div>
+<div class="flex flex-col hidden sm:flex">
+<span class="text-sm font-bold text-white">Sarah Chen</span>
+<span class="text-[10px] text-[var(--text-secondary)] uppercase tracking-wide">Admin</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 w-full max-w-[1400px] mx-auto p-4 sm:p-6 lg:p-10">
+<div class="mb-10 flex justify-between items-end">
+<div>
+<h2 class="text-3xl font-semibold text-white tracking-tight flex items-center gap-3">
+                    Decision Dashboard
+                    <span class="sparkle text-lg text-[var(--accent-primary)]">✦</span>
+</h2>
+<p class="text-[var(--text-secondary)] text-lg mt-2 font-light">Analyze customer segments and generate retention strategies.</p>
+</div>
+<div class="hidden md:flex gap-2">
+<span class="text-sm font-medium text-[var(--text-secondary)] flex items-center gap-2 border border-[var(--border-subtle)] rounded-md px-3 py-2 bg-[var(--bg-card)]">
+<span class="size-2 rounded-full bg-[var(--accent-neon-green)] animate-[pulse_2s_infinite] shadow-[0_0_8px_var(--accent-neon-green)]"></span> Live Data
+                </span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<div class="lg:col-span-4 space-y-6">
+<div class="card p-8 bg-glow-gradient">
+<div class="flex items-center gap-3 mb-8 border-b border-[var(--border-subtle)] pb-6">
+<span class="material-symbols-outlined thick text-[var(--text-secondary)] text-[28px]">tune</span>
+<h3 class="text-lg font-bold text-white uppercase tracking-wider">Parameters</h3>
+</div>
+<form class="space-y-8">
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<label class="text-lg font-semibold text-white">Last Visit</label>
+<span class="font-mono text-xl font-bold text-[var(--accent-primary)] drop-shadow-[0_0_8px_rgba(142,255,51,0.5)]">45d</span>
+</div>
+<div class="relative pt-2">
+<input class="w-full" max="90" min="0" type="range" value="45"/>
+<div class="flex justify-between text-xs text-[var(--text-secondary)] mt-3 font-medium font-mono uppercase tracking-widest">
+<span>Now</span>
+<span>30d</span>
+<span>60d</span>
+<span>90d</span>
+</div>
+</div>
+</div>
+<div class="space-y-4 pt-2">
+<label class="text-lg font-semibold text-white block">App Usage</label>
+<div class="grid grid-cols-2 gap-4">
+<label class="cursor-pointer group h-full">
+<input checked="" class="peer sr-only" name="app_usage" type="radio"/>
+<div class="flex flex-col items-center justify-center gap-3 py-4 px-4 rounded-lg border-2 border-[var(--border-subtle)] bg-[var(--bg-page)] text-[var(--text-secondary)] peer-checked:bg-[#2C2C2E] peer-checked:border-white peer-checked:text-white transition-all hover:border-[#555]">
+<span class="material-symbols-outlined thick text-[36px]">smartphone</span>
+<span class="text-sm font-bold uppercase tracking-wide">Installed</span>
+</div>
+</label>
+<label class="cursor-pointer group h-full">
+<input class="peer sr-only" name="app_usage" type="radio"/>
+<div class="flex flex-col items-center justify-center gap-3 py-4 px-4 rounded-lg border-2 border-[var(--border-subtle)] bg-[var(--bg-page)] text-[var(--text-secondary)] peer-checked:bg-[#2C2C2E] peer-checked:border-white peer-checked:text-white transition-all hover:border-[#555]">
+<span class="material-symbols-outlined thick text-[36px]">mobile_off</span>
+<span class="text-sm font-bold uppercase tracking-wide">None</span>
+</div>
+</label>
+</div>
+</div>
+<div class="space-y-4 pt-2">
+<label class="text-lg font-semibold text-white block">Coupon History</label>
+<div class="flex items-center justify-between p-5 rounded-lg border-2 border-[var(--border-subtle)] bg-[var(--bg-page)]">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined thick text-[32px] text-[var(--text-secondary)]">local_activity</span>
+<span class="text-base font-bold text-[var(--text-primary)]">Redeemed?</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-14 h-8 bg-[#2C2C2E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[var(--accent-primary)] peer-checked:shadow-[0_0_15px_var(--accent-primary)]"></div>
+</label>
+</div>
+</div>
+<button class="w-full py-4 px-6 btn-primary btn-shimmer mt-6 flex items-center justify-center gap-3 group text-base uppercase tracking-wider font-bold" type="button">
+<span>Run Analysis</span>
+<span class="material-symbols-outlined thick text-[24px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</form>
+</div>
+<div class="card p-6 border border-[var(--border-subtle)] flex gap-4 items-start bg-[var(--bg-card)]">
+<span class="material-symbols-outlined thick text-[var(--accent-primary)] text-[28px] shrink-0 mt-1 animate-pulse" style="text-shadow: 0 0 10px var(--accent-primary);">lightbulb</span>
+<div>
+<h4 class="text-sm font-bold text-white mb-2 flex items-center gap-2 uppercase tracking-wide">
+                                Insight
+                                <span class="sparkle text-[12px] text-[var(--accent-primary)]">✦</span>
+</h4>
+<p class="text-sm text-[var(--text-secondary)] leading-relaxed font-medium">
+                            App users with coupon redemption in the last 30d show <span class="text-white font-bold border-b border-[var(--accent-primary)]">40% higher retention</span>.
+                        </p>
+</div>
+</div>
+</div>
+<div class="lg:col-span-8 space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="card p-8 bg-glow-danger relative overflow-hidden group min-h-[320px] flex flex-col">
+<div class="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[180px] text-white rotate-12">local_cafe</span>
+</div>
+<div class="relative z-10 flex flex-col h-full justify-between">
+<div>
+<div class="flex items-center gap-3 mb-6">
+<span class="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-widest border border-[var(--border-subtle)] rounded px-2 py-1">Segment Result</span>
+</div>
+<div class="flex items-baseline gap-4 mb-4">
+<h3 class="text-[120px] leading-none font-bold animate-fade-in relative z-10 text-glow-danger-intense" style="font-feature-settings: 'tnum' on, 'lnum' on;">
+                                        B
+                                    </h3>
+<div class="flex flex-col mb-4">
+<span class="text-3xl font-bold uppercase tracking-tight text-glow-danger-intense">High Risk</span>
+<span class="text-sm text-[var(--text-secondary)] font-medium">Requires immediate action</span>
+</div>
+</div>
+<p class="text-[var(--text-secondary)] text-base leading-relaxed max-w-xs font-medium">Customer shows strong signs of disengagement despite previous high-value history.</p>
+</div>
+<div class="mt-8">
+<div class="flex items-center gap-4 mb-2">
+<div class="flex -space-x-3">
+<div class="size-10 rounded-full border-2 border-[var(--bg-card)] bg-gray-700 bg-cover" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC0e7VyYiaJSwUfbMHpGaSAgYVFcauqjxOT2bszbR2qNf3Vkaq3DU2eD5ss3BM3D6ac_KmKZf0N7CTb84mfKaqcEiH3TvxLGljkfOIS8RzBLHvzwBFcFMw6xigkyIqJvQgFpBjuvC4qM3sphJnqb0Z8DZEcvf6qNpmLctow14tHj-nLagI6mAJl0_Y_xAPFDXH8qCG4nRPD4qGJorGNMC6PGVOse8I7srNjM3CZHI_7UchMspM876XC2tkTZw_zzVoqiLhBf13P-HVe')"></div>
+<div class="size-10 rounded-full border-2 border-[var(--bg-card)] bg-gray-700 bg-cover" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBFFgfzaytFGMsV7GPsW9HraW-cM1vACdlfU1rYBHbQkgJRjIZ8hZiqxYRH5xtESO_LZ0j4kbQYIjcmYWnsDCot-EvXRrZoHVZVdHWJNkU8FUtrfGzHi7w16rvzx8kTO26BGutLdKXN4dhtPRwmDyPcStLYeAG5mL2m4U33a0XBeXgM0L82GRa9eNXii9eKw8vcMFQSHC50fGx8MYJtYsafjkO27UDtIXOgSyIp-7mb4pXHudXq2jsYKSOmJGEG9tOfz-GnU3nsPdNk')"></div>
+<div class="size-10 rounded-full border-2 border-[var(--bg-card)] bg-gray-700 bg-cover" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB9hYyuTHH_5oN94Orb7m4MYragN2dCnXhGCijmHnvYOQuD4cKrjjSWbh5iZX6M80G11V52FApw6J9MRBT99GctjxY0rC8K8_1yRW-jkH8QG_-Ze2OL28HydwOTTj7kS0vjePVMFESkpIimqE033uNPlhKKLHG-jtazfgNeSDrLipp8o9oSljJzdkbvw1Wj5gocYKvLLvh6y39Ksqau69t5kyQumAHvFk1ydBsZ7p5fGDdBlQKKuGxhKUdw3wg05rig2LsIXamUba4T')"></div>
+<div class="size-10 rounded-full border-2 border-[var(--bg-card)] bg-[#2C2C2E] flex items-center justify-center text-xs font-bold text-white">+42</div>
+</div>
+<span class="text-sm font-medium text-[var(--text-secondary)]">similar profiles identified</span>
+</div>
+</div>
+</div>
+</div>
+<div class="card p-8 flex flex-col justify-between">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h4 class="text-lg font-bold text-white">Churn Probability</h4>
+<p class="text-sm text-[var(--text-secondary)] mt-1 font-medium">AI Prediction Model v2.1</p>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF4D4D]/10 text-[#FF4D4D] border border-[#FF4D4D]/20 uppercase tracking-wide font-bold shadow-[0_0_10px_rgba(255,77,77,0.2)]">
+<span class="size-2 bg-[#FF4D4D] rounded-full animate-pulse shadow-[0_0_5px_#FF4D4D]"></span>
+<span>Critical</span>
+</div>
+</div>
+<div class="flex flex-col items-center justify-center py-4 relative w-full flex-grow">
+<div class="w-full flex items-end justify-between mb-4 px-2">
+<span class="text-sm text-[var(--text-secondary)] font-mono font-bold">0%</span>
+<div class="text-center">
+<span class="text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-neon-orange">78<span class="text-3xl text-[var(--text-secondary)] font-light text-shadow-none">%</span></span>
+</div>
+<span class="text-sm text-[var(--text-secondary)] font-mono font-bold">100%</span>
+</div>
+<div class="h-4 w-full bg-[#2C2C2E] rounded-full overflow-hidden relative shadow-inner">
+<div class="h-full bg-gradient-to-r from-orange-500 via-[#FF4D4D] to-red-600 rounded-full relative overflow-hidden shadow-[0_0_25px_rgba(255,77,77,0.8)]" style="width: 78%">
+<div class="progress-streak"></div>
+</div>
+</div>
+<div class="w-full relative h-6 mt-2">
+<div class="absolute top-0 w-0.5 h-3 bg-[var(--text-secondary)] opacity-50" style="left: 30%"></div>
+<div class="absolute top-3 text-[10px] uppercase font-bold tracking-wider text-[var(--text-secondary)] transform -translate-x-1/2" style="left: 30%">30d limit</div>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-3 p-4 rounded-lg bg-[#2C2C2E]/40 border border-white/5">
+<span class="material-symbols-outlined thick text-[20px] text-[var(--text-secondary)]">info</span>
+<p class="text-sm font-medium text-[var(--text-secondary)]">Risk spikes significantly after <span class="text-white font-bold">30 days</span> of inactivity.</p>
+</div>
+</div>
+</div>
+<div class="card overflow-hidden">
+<div class="px-8 py-6 border-b border-[var(--border-subtle)] flex justify-between items-center bg-[var(--bg-card)]">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined thick text-[var(--text-secondary)] text-[28px]">strategy</span>
+<div>
+<h3 class="text-xl font-bold text-white tracking-tight">Recommended Strategy</h3>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="text-sm font-semibold text-[var(--text-secondary)] hover:text-white transition-colors px-4 py-2 rounded-md hover:bg-white/5 uppercase tracking-wide">Export Plan</button>
+</div>
+</div>
+<div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex flex-col gap-4 group cursor-pointer p-4 -m-4 rounded-lg hover-lift-glow hover:bg-white/5 transition-colors">
+<div class="w-full h-40 rounded-lg border border-[var(--border-subtle)] bg-cover bg-center overflow-hidden relative shadow-lg" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAmFf7QRpk_q4mPEZlcXr55tkNLwAAtmc47LsrA8Mj7_25hA2yGFvlzvGmIavwE7bPizyTaTFLD-2Qa8Q0ZtqkTocW2qdCpW5zeYE06FRm8M15Vwe19Ozxxpp1bFbq1Y4xbUoLeZfqkitWWuHNuD6IrjJR3egzzlU8MT80mysU54MTBq6OPzAh77NMFV047Y8cs4nsWJK_qzCuvLgeWWpdatoRBgR4vur9z321RY6cZjzQFQZyRbsx52NfP46hmnAE6lpREe4K6krkA')">
+<div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors"></div>
+<div class="absolute bottom-3 left-3 backdrop-blur-md bg-black/60 border border-white/10 px-3 py-1 rounded text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">sell</span>
+                                    Discount
+                                </div>
+</div>
+<div>
+<h5 class="text-lg font-bold text-white flex items-center gap-2 mb-2">
+                                    Priority Coupon 
+                                    <span class="material-symbols-outlined thick text-[20px] text-[var(--accent-primary)] shadow-[0_0_10px_var(--accent-primary)] rounded-full">check_circle</span>
+</h5>
+<p class="text-sm text-[var(--text-secondary)] font-medium leading-relaxed">25% off valid for 48h. Triggers immediate return.</p>
+</div>
+</div>
+<div class="flex flex-col gap-4 group cursor-pointer p-4 -m-4 rounded-lg hover:bg-white/5 transition-colors">
+<div class="w-full h-40 rounded-lg border border-[var(--border-subtle)] bg-cover bg-center overflow-hidden relative shadow-lg" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBC89nUfnF-_j5v5HHD46wJZPs313wMDgN9auRCzQWB-IVORQO383DmgXeF-MfXktVfsZoJDdt8Q96_nN5nEnoHp5pgjEW88WZ5Ma3TOj9WbhPZ0NEHq8Ze3_rJtFOoydHKdUBK7v6tX_IYnRNBUGBEjBOWigSUsKDxlzW37e06uoy_Flvijd3eivy0W-83YGKo9nDelgN4ftUlz875BayaHgjyi9k0EuZfjudM2fOwGxQr7t0LLr4g9hchtujQBYazSorJRh_gJfAD')">
+<div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors"></div>
+<div class="absolute bottom-3 left-3 backdrop-blur-md bg-black/60 border border-white/10 px-3 py-1 rounded text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">inventory_2</span>
+                                    Product
+                                </div>
+</div>
+<div>
+<h5 class="text-lg font-bold text-white flex items-center gap-2 mb-2">
+                                    Flavor Sample
+                                </h5>
+<p class="text-sm text-[var(--text-secondary)] font-medium leading-relaxed">Complimentary tasting of Seasonal Oolong.</p>
+</div>
+</div>
+<div class="flex flex-col gap-4 group cursor-pointer p-4 -m-4 rounded-lg hover:bg-white/5 transition-colors">
+<div class="w-full h-40 rounded-lg border border-[var(--border-subtle)] bg-cover bg-center overflow-hidden relative shadow-lg" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA4FNtDhLRdBEtjLc6ojXzEsw-rH9NECjyFRErvivLvjgNH5JX6uD4YRO3WWl9KZQ-61ztVeDxVq5P47rBgtlvAxGareXlm_5_t9MV4qH1yZsUWM18nHbEvHSGQXYY0VV4a2XCZyXB3twuoYmNmRHI7WSb4LdTghde3sANVQFsQjflBjtgMtPWfq3TOz24bMqvlTdRRQ6rE8IynJQ-EiESUnLWmpT6yEh_Vzcblum3Zxl24Vi1kvYHRz_dgi8AsH3XE9mwsWOTzMMj1')">
+<div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors"></div>
+<div class="absolute bottom-3 left-3 backdrop-blur-md bg-black/60 border border-white/10 px-3 py-1 rounded text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">sms</span>
+                                    Channel
+                                </div>
+</div>
+<div>
+<h5 class="text-lg font-bold text-white flex items-center gap-2 mb-2">
+                                    SMS Reminder
+                                </h5>
+<p class="text-sm text-[var(--text-secondary)] font-medium leading-relaxed">Personalized "We Miss You" SMS with link.</p>
+</div>
+</div>
+</div>
+<div class="px-8 pb-6 pt-2">
+<div class="bg-[var(--accent-primary)]/10 rounded-lg border border-[var(--accent-primary)]/20 p-4 flex items-center justify-between shadow-[0_0_15px_rgba(142,255,51,0.05)]">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined thick text-[24px] text-[var(--accent-primary)]">trending_up</span>
+<span class="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wide">Projected Retention Lift</span>
+</div>
+<span class="text-2xl font-bold text-glow-electric-green font-mono">+18.5%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

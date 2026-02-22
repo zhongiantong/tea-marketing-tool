@@ -492,7 +492,6 @@ const churnProbabilityBar = document.querySelector('.h-full.bg-gradient-to-r');
 const riskLevelBadge = document.querySelector('.flex.items-center.gap-2.px-3.py-1.rounded-full');
 const similarProfilesCount = document.querySelector('.size-10.bg-\\[\\#2C2C2E\\]');
 
-// Update display values
 // Update display values (終極動態策略版)
 function updateDisplay() {
     const lastVisitDays = parseInt(lastVisitSlider.value);
@@ -514,6 +513,7 @@ function updateDisplay() {
     segmentTitle.textContent = segment.title;
     segmentSubtitle.textContent = segment.subtitle;
     segmentDescription.textContent = segment.description;
+    strategyDescription.textContent = segment.strategy; // 更新上面那行小字
     
     // 3. 計算流失率與風險狀態
     const riskSpan = riskLevelBadge.querySelector('span:last-child');
@@ -521,7 +521,6 @@ function updateDisplay() {
     let churnProbability;
 
     if (lastVisitDays > 30) {
-        // 高風險
         riskSpan.textContent = '⚠️ 高危險流失客';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF3333]/20 text-[#FF3333] border border-[#FF3333]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(255,51,51,0.4)]';
         riskDot.className = 'size-2 bg-[#FF3333] rounded-full animate-pulse shadow-[0_0_8px_#FF3333]';
@@ -532,7 +531,6 @@ function updateDisplay() {
         churnProbability = 60 + ((lastVisitDays - 30) * 1.5);
         churnProbability = Math.min(98, Math.round(churnProbability));
     } else {
-        // 低風險
         riskSpan.textContent = '✅ 活躍安全客';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(142,255,51,0.3)]';
         riskDot.className = 'size-2 bg-[var(--accent-primary)] rounded-full animate-pulse shadow-[0_0_8px_var(--accent-primary)]';
@@ -557,9 +555,7 @@ function updateDisplay() {
         lastVisitDisplay.textContent = `${lastVisitDays}d`;
     }
 
-    // =========================================================
-    // 4. 終極版：更新三個推薦策略框框 (動態優惠內容 + 條件打勾)
-    // =========================================================
+    // 4. 更新三個推薦策略框框 (動態優惠內容 + 條件打勾)
     const strategyGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3');
     if (strategyGrid) {
         const h5s = strategyGrid.querySelectorAll('h5');
@@ -570,7 +566,7 @@ function updateDisplay() {
 
         if (h5s.length >= 3 && ps.length >= 3) {
             
-            // ----- 框框 1：專屬優惠 (A/B/C 完全不同) -----
+            // 框框 1：專屬優惠
             if (segment.letter === 'A') {
                 h5s[0].innerHTML = '實體集點卡' + (churnProbability > 80 ? redCheck : '');
                 ps[0].textContent = '推出實體集點卡，讓傳統顧客也能累積點數換飲料。';
@@ -578,70 +574,19 @@ function updateDisplay() {
                 h5s[0].innerHTML = '高折扣優惠券' + (churnProbability > 80 ? redCheck : '');
                 ps[0].textContent = '發送限時、高折扣的促銷優惠券喚醒消費。';
             } else if (segment.letter === 'C') {
-                h5s[0].innerHTML = 'VIP 儲值與升級' + greenCheck; // C群標配綠色勾勾
+                h5s[0].innerHTML = 'VIP 儲值與升級' + greenCheck;
                 ps[0].textContent = '推廣 VIP 儲值卡與專屬升級活動，加深粉絲黏著度。';
             }
 
-            // ----- 框框 2：口味樣品 (C群專屬飲料) -----
+            // 框框 2：口味樣品 (C群專屬飲料)
             h5s[1].innerHTML = '口味樣品' + (segment.letter === 'C' ? greenCheck : '');
             ps[1].innerHTML = segment.letter === 'C' ? '<span class="text-[var(--accent-primary)] font-bold">✅ 專屬福利：提供免費飲料</span>' : '免費品嚐季節限定烏龍茶。';
 
-            // ----- 框框 3：SMS 提醒 (≥40天危險預警) -----
+            // 框框 3：SMS 提醒 (≥40天危險預警)
             h5s[2].innerHTML = 'SMS 提醒' + (lastVisitDays >= 40 ? redCheck : '');
             ps[2].textContent = '個人化「我們想念您」簡訊附帶連結。';
         }
     }
-}
-    
-    // Update risk level badge based on last visit days
-    const riskSpan = riskLevelBadge.querySelector('span:last-child');
-    const riskDot = riskLevelBadge.querySelector('.size-2');
-    
-    // Calculate dynamic churn probability based on formula
-    let churnProbability;
-    if (lastVisitDays > 30) {
-        // High risk - red warning
-        riskSpan.textContent = '⚠️ 高危險流失客';
-        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF3333]/20 text-[#FF3333] border border-[#FF3333]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(255,51,51,0.4)]';
-        riskDot.className = 'size-2 bg-[#FF3333] rounded-full animate-pulse shadow-[0_0_8px_#FF3333]';
-        
-        // Update churn probability bar to red gradient
-        churnProbabilityBar.className = 'h-full bg-gradient-to-r from-red-500 via-[#FF3333] to-red-700 rounded-full relative overflow-hidden shadow-[0_0_30px_rgba(255,51,51,0.9)]';
-        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-danger-intense';
-        
-        // Formula: 60 + ((Last Visit - 30) × 1.5) %, max 98%
-        churnProbability = 60 + ((lastVisitDays - 30) * 1.5);
-        churnProbability = Math.min(98, Math.round(churnProbability));
-    } else {
-        // Low risk - green safe
-        riskSpan.textContent = '✅ 活躍安全客';
-        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(142,255,51,0.3)]';
-        riskDot.className = 'size-2 bg-[var(--accent-primary)] rounded-full animate-pulse shadow-[0_0_8px_var(--accent-primary)]';
-        
-        // Update churn probability bar to green gradient
-        churnProbabilityBar.className = 'h-full bg-gradient-to-r from-green-500 via-[var(--accent-primary)] to-green-600 rounded-full relative overflow-hidden shadow-[0_0_30px_rgba(142,255,51,0.6)]';
-        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-electric-green';
-        
-        // Formula: (Last Visit × 1.2) %, max 36%
-        churnProbability = lastVisitDays * 1.2;
-        churnProbability = Math.min(36, Math.round(churnProbability));
-    }
-    
-    // Update churn probability value and width
-    churnProbabilityValue.innerHTML = `${churnProbability}<span class="text-3xl text-[var(--text-secondary)] font-light text-shadow-none">%</span>`;
-    churnProbabilityBar.style.width = `${churnProbability}%`;
-    
-    // Update similar profiles count
-    if (similarProfilesCount) {
-        similarProfilesCount.textContent = `+${segment.similarProfiles}`;
-    }
-    
-    // Update last visit display
-    const lastVisitDisplay = document.querySelector('.font-mono.text-xl');
-    if (lastVisitDisplay) {
-        lastVisitDisplay.textContent = `${lastVisitDays}d`;
-    }
-    
 }
 
 // Add event listeners for real-time updates
@@ -668,20 +613,8 @@ function showUpdateIndicator() {
     }, 1000);
 }
 
-// Enhance event listeners with visual feedback
-lastVisitSlider.addEventListener('input', () => {
-    updateDisplay();
-    showUpdateIndicator();
-});
-
-appUsageRadios.forEach(radio => radio.addEventListener('change', () => {
-    updateDisplay();
-    showUpdateIndicator();
-}));
-
-couponToggle.addEventListener('change', () => {
-    updateDisplay();
-    showUpdateIndicator();
-});
+lastVisitSlider.addEventListener('input', showUpdateIndicator);
+appUsageRadios.forEach(radio => radio.addEventListener('change', showUpdateIndicator));
+couponToggle.addEventListener('change', showUpdateIndicator);
 </script>
 </body></html>

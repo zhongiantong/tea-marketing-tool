@@ -544,10 +544,12 @@ function updateDisplay() {
             
             // 框框 1：專屬優惠
             if (segment.letter === 'A') {
-                h5s[0].innerHTML = '實體集點卡' + (churnProbability > 80 ? redCheck : '');
+                // 流失率大於80%給紅勾急救，平時給綠勾當作常規推薦
+                h5s[0].innerHTML = '實體集點卡' + (churnProbability > 80 ? redCheck : greenCheck);
                 ps[0].textContent = '推出實體集點卡，讓傳統顧客也能累積點數換飲料。';
             } else if (segment.letter === 'B') {
-                h5s[0].innerHTML = '高折扣優惠券' + (churnProbability > 80 ? redCheck : '');
+                // 流失率大於80%給紅勾急救，平時給綠勾當作常規推薦
+                h5s[0].innerHTML = '高折扣優惠券' + (churnProbability > 80 ? redCheck : greenCheck);
                 ps[0].textContent = '發送限時、高折扣的促銷優惠券喚醒消費。';
             } else if (segment.letter === 'C') {
                 h5s[0].innerHTML = 'VIP 儲值與升級' + greenCheck;

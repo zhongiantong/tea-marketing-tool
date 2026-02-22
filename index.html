@@ -493,62 +493,105 @@ const riskLevelBadge = document.querySelector('.flex.items-center.gap-2.px-3.py-
 const similarProfilesCount = document.querySelector('.size-10.bg-\\[\\#2C2C2E\\]');
 
 // Update display values
+// Update display values (終極動態策略版)
 function updateDisplay() {
     const lastVisitDays = parseInt(lastVisitSlider.value);
     const appUsage = document.querySelector('input[name="app_usage"]:checked').value;
     const couponRedeemed = couponToggle.checked;
     
-    // Determine segment based on logic
+    // 1. 判斷群體 (A/B/C)
     let segment;
     if (lastVisitDays <= 30 && appUsage === 'installed' && couponRedeemed) {
-        segment = segments.C; // Active engaged users
+        segment = segments.C; // 主力客
     } else if (lastVisitDays > 60 && appUsage === 'none' && !couponRedeemed) {
-        segment = segments.B; // High risk churn
+        segment = segments.B; // 高危客
     } else {
-        segment = segments.A; // Traditional customers
+        segment = segments.A; // 傳統客
     }
     
-    // Update segment display
+    // 2. 更新左側群體顯示
     segmentLetter.textContent = segment.letter;
     segmentTitle.textContent = segment.title;
     segmentSubtitle.textContent = segment.subtitle;
     segmentDescription.textContent = segment.description;
     
-    // ===== 更新推薦策略 (三個框框動態打勾版) =====
-    
-    // 1. 確保上方那句簡短的文字描述依然正常顯示
-    strategyDescription.textContent = segment.strategy;
+    // 3. 計算流失率與風險狀態
+    const riskSpan = riskLevelBadge.querySelector('span:last-child');
+    const riskDot = riskLevelBadge.querySelector('.size-2');
+    let churnProbability;
 
-    // 2. 抓取那三個框框的標題 (H5)
-    const strategyTitles = document.querySelectorAll('.grid.grid-cols-1.md\\:grid-cols-3 h5');
-    
-    // 定義發光打勾勾的 HTML (綠色與紅色警告)
-    const greenCheck = `<span class="material-symbols-outlined thick text-[20px] text-[var(--accent-primary)] shadow-[0_0_10px_var(--accent-primary)] rounded-full">check_circle</span>`;
-    const redCheck = `<span class="material-symbols-outlined thick text-[20px] text-[#FF4D4D] shadow-[0_0_10px_#FF4D4D] rounded-full">check_circle</span>`;
-
-    // 3. 每次更新前，先把它們重置回沒有打勾的乾淨狀態
-    if (strategyTitles.length >= 3) {
-        strategyTitles[0].innerHTML = '優先優惠券';
-        strategyTitles[1].innerHTML = '口味樣品';
-        strategyTitles[2].innerHTML = 'SMS 提醒';
-
-        // 4. 開始根據條件動態打勾！
+    if (lastVisitDays > 30) {
+        // 高風險
+        riskSpan.textContent = '⚠️ 高危險流失客';
+        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF3333]/20 text-[#FF3333] border border-[#FF3333]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(255,51,51,0.4)]';
+        riskDot.className = 'size-2 bg-[#FF3333] rounded-full animate-pulse shadow-[0_0_8px_#FF3333]';
         
-        // 如果是群體 B (高危流失客) -> 勾選「優先優惠券」
-        if (segment.letter === 'B') {
-            strategyTitles[0].innerHTML = '優先優惠券 ' + greenCheck;
-        }
+        churnProbabilityBar.className = 'h-full bg-gradient-to-r from-red-500 via-[#FF3333] to-red-700 rounded-full relative overflow-hidden shadow-[0_0_30px_rgba(255,51,51,0.9)]';
+        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-danger-intense';
+        
+        churnProbability = 60 + ((lastVisitDays - 30) * 1.5);
+        churnProbability = Math.min(98, Math.round(churnProbability));
+    } else {
+        // 低風險
+        riskSpan.textContent = '✅ 活躍安全客';
+        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(142,255,51,0.3)]';
+        riskDot.className = 'size-2 bg-[var(--accent-primary)] rounded-full animate-pulse shadow-[0_0_8px_var(--accent-primary)]';
+        
+        churnProbabilityBar.className = 'h-full bg-gradient-to-r from-green-500 via-[var(--accent-primary)] to-green-600 rounded-full relative overflow-hidden shadow-[0_0_30px_rgba(142,255,51,0.6)]';
+        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-electric-green';
+        
+        churnProbability = lastVisitDays * 1.2;
+        churnProbability = Math.min(36, Math.round(churnProbability));
+    }
+    
+    // 更新流失率數字顯示
+    churnProbabilityValue.innerHTML = `${churnProbability}<span class="text-3xl text-[var(--text-secondary)] font-light text-shadow-none">%</span>`;
+    churnProbabilityBar.style.width = `${churnProbability}%`;
+    
+    if (similarProfilesCount) {
+        similarProfilesCount.textContent = `+${segment.similarProfiles}`;
+    }
+    
+    const lastVisitDisplay = document.querySelector('.font-mono.text-xl');
+    if (lastVisitDisplay) {
+        lastVisitDisplay.textContent = `${lastVisitDays}d`;
+    }
 
-        // 如果是群體 C (主力潛力客) -> 勾選「口味樣品 (免費飲料)」
-        if (segment.letter === 'C') {
-            strategyTitles[1].innerHTML = '口味樣品 ' + greenCheck;
-        }
+    // =========================================================
+    // 4. 終極版：更新三個推薦策略框框 (動態優惠內容 + 條件打勾)
+    // =========================================================
+    const strategyGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3');
+    if (strategyGrid) {
+        const h5s = strategyGrid.querySelectorAll('h5');
+        const ps = strategyGrid.querySelectorAll('p');
+        
+        const greenCheck = `<span class="material-symbols-outlined thick text-[20px] text-[var(--accent-primary)] shadow-[0_0_10px_var(--accent-primary)] rounded-full ml-2">check_circle</span>`;
+        const redCheck = `<span class="material-symbols-outlined thick text-[20px] text-[#FF4D4D] shadow-[0_0_10px_#FF4D4D] rounded-full ml-2">check_circle</span>`;
 
-        // 如果超過 40 天沒來 -> 強制勾選「SMS 提醒 (紅色警告勾勾)」
-        if (lastVisitDays >= 40) {
-            strategyTitles[2].innerHTML = 'SMS 提醒 ' + redCheck;
+        if (h5s.length >= 3 && ps.length >= 3) {
+            
+            // ----- 框框 1：專屬優惠 (A/B/C 完全不同) -----
+            if (segment.letter === 'A') {
+                h5s[0].innerHTML = '實體集點卡' + (churnProbability > 80 ? redCheck : '');
+                ps[0].textContent = '推出實體集點卡，讓傳統顧客也能累積點數換飲料。';
+            } else if (segment.letter === 'B') {
+                h5s[0].innerHTML = '高折扣優惠券' + (churnProbability > 80 ? redCheck : '');
+                ps[0].textContent = '發送限時、高折扣的促銷優惠券喚醒消費。';
+            } else if (segment.letter === 'C') {
+                h5s[0].innerHTML = 'VIP 儲值與升級' + greenCheck; // C群標配綠色勾勾
+                ps[0].textContent = '推廣 VIP 儲值卡與專屬升級活動，加深粉絲黏著度。';
+            }
+
+            // ----- 框框 2：口味樣品 (C群專屬飲料) -----
+            h5s[1].innerHTML = '口味樣品' + (segment.letter === 'C' ? greenCheck : '');
+            ps[1].innerHTML = segment.letter === 'C' ? '<span class="text-[var(--accent-primary)] font-bold">✅ 專屬福利：提供免費飲料</span>' : '免費品嚐季節限定烏龍茶。';
+
+            // ----- 框框 3：SMS 提醒 (≥40天危險預警) -----
+            h5s[2].innerHTML = 'SMS 提醒' + (lastVisitDays >= 40 ? redCheck : '');
+            ps[2].textContent = '個人化「我們想念您」簡訊附帶連結。';
         }
     }
+}
     
     // Update risk level badge based on last visit days
     const riskSpan = riskLevelBadge.querySelector('span:last-child');

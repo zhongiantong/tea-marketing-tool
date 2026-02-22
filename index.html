@@ -223,14 +223,14 @@
 <div class="mb-10 flex justify-between items-end">
 <div>
 <h2 class="text-3xl font-semibold text-white tracking-tight flex items-center gap-3">
-                    Decision Dashboard
+                    決策儀表板
                     <span class="sparkle text-lg text-[var(--accent-primary)]">✦</span>
 </h2>
-<p class="text-[var(--text-secondary)] text-lg mt-2 font-light">Analyze customer segments and generate retention strategies.</p>
+<p class="text-[var(--text-secondary)] text-lg mt-2 font-light">分析客戶分群並生成留存策略。</p>
 </div>
 <div class="hidden md:flex gap-2">
 <span class="text-sm font-medium text-[var(--text-secondary)] flex items-center gap-2 border border-[var(--border-subtle)] rounded-md px-3 py-2 bg-[var(--bg-card)]">
-<span class="size-2 rounded-full bg-[var(--accent-neon-green)] animate-[pulse_2s_infinite] shadow-[0_0_8px_var(--accent-neon-green)]"></span> Live Data
+<span class="size-2 rounded-full bg-[var(--accent-neon-green)] animate-[pulse_2s_infinite] shadow-[0_0_8px_var(--accent-neon-green)]"></span> 即時數據
                 </span>
 </div>
 </div>
@@ -239,12 +239,12 @@
 <div class="card p-8 bg-glow-gradient">
 <div class="flex items-center gap-3 mb-8 border-b border-[var(--border-subtle)] pb-6">
 <span class="material-symbols-outlined thick text-[var(--text-secondary)] text-[28px]">tune</span>
-<h3 class="text-lg font-bold text-white uppercase tracking-wider">Parameters</h3>
+<h3 class="text-lg font-bold text-white uppercase tracking-wider">參數設定</h3>
 </div>
 <form class="space-y-8">
 <div class="space-y-4">
 <div class="flex justify-between items-end">
-<label class="text-lg font-semibold text-white">Last Visit</label>
+<label class="text-lg font-semibold text-white">最後到訪</label>
 <span class="font-mono text-xl font-bold text-[var(--accent-primary)] drop-shadow-[0_0_8px_rgba(142,255,51,0.5)]">45d</span>
 </div>
 <div class="relative pt-2">
@@ -258,30 +258,30 @@
 </div>
 </div>
 <div class="space-y-4 pt-2">
-<label class="text-lg font-semibold text-white block">App Usage</label>
+<label class="text-lg font-semibold text-white block">App 使用</label>
 <div class="grid grid-cols-2 gap-4">
 <label class="cursor-pointer group h-full">
-<input checked="" class="peer sr-only" name="app_usage" type="radio"/>
+<input checked="" class="peer sr-only" name="app_usage" type="radio" value="installed"/>
 <div class="flex flex-col items-center justify-center gap-3 py-4 px-4 rounded-lg border-2 border-[var(--border-subtle)] bg-[var(--bg-page)] text-[var(--text-secondary)] peer-checked:bg-[#2C2C2E] peer-checked:border-white peer-checked:text-white transition-all hover:border-[#555]">
 <span class="material-symbols-outlined thick text-[36px]">smartphone</span>
-<span class="text-sm font-bold uppercase tracking-wide">Installed</span>
+<span class="text-sm font-bold uppercase tracking-wide">已安裝</span>
 </div>
 </label>
 <label class="cursor-pointer group h-full">
-<input class="peer sr-only" name="app_usage" type="radio"/>
+<input class="peer sr-only" name="app_usage" type="radio" value="none"/>
 <div class="flex flex-col items-center justify-center gap-3 py-4 px-4 rounded-lg border-2 border-[var(--border-subtle)] bg-[var(--bg-page)] text-[var(--text-secondary)] peer-checked:bg-[#2C2C2E] peer-checked:border-white peer-checked:text-white transition-all hover:border-[#555]">
 <span class="material-symbols-outlined thick text-[36px]">mobile_off</span>
-<span class="text-sm font-bold uppercase tracking-wide">None</span>
+<span class="text-sm font-bold uppercase tracking-wide">未使用</span>
 </div>
 </label>
 </div>
 </div>
 <div class="space-y-4 pt-2">
-<label class="text-lg font-semibold text-white block">Coupon History</label>
+<label class="text-lg font-semibold text-white block">優惠券歷史</label>
 <div class="flex items-center justify-between p-5 rounded-lg border-2 border-[var(--border-subtle)] bg-[var(--bg-page)]">
 <div class="flex items-center gap-4">
 <span class="material-symbols-outlined thick text-[32px] text-[var(--text-secondary)]">local_activity</span>
-<span class="text-base font-bold text-[var(--text-primary)]">Redeemed?</span>
+<span class="text-base font-bold text-[var(--text-primary)]">已兌換？</span>
 </div>
 <label class="relative inline-flex items-center cursor-pointer">
 <input class="sr-only peer" type="checkbox" value=""/>
@@ -289,21 +289,24 @@
 </label>
 </div>
 </div>
-<button class="w-full py-4 px-6 btn-primary btn-shimmer mt-6 flex items-center justify-center gap-3 group text-base uppercase tracking-wider font-bold" type="button">
-<span>Run Analysis</span>
-<span class="material-symbols-outlined thick text-[24px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
-</button>
+<div class="mt-6 p-4 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-page)]">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined thick text-[var(--accent-primary)] text-[20px]">sync</span>
+<span class="text-sm font-medium text-[var(--text-secondary)]">即時更新已啟用</span>
+<span class="ml-auto text-xs font-bold text-[var(--accent-primary)] uppercase tracking-wider animate-pulse">LIVE</span>
+</div>
+</div>
 </form>
 </div>
 <div class="card p-6 border border-[var(--border-subtle)] flex gap-4 items-start bg-[var(--bg-card)]">
 <span class="material-symbols-outlined thick text-[var(--accent-primary)] text-[28px] shrink-0 mt-1 animate-pulse" style="text-shadow: 0 0 10px var(--accent-primary);">lightbulb</span>
 <div>
 <h4 class="text-sm font-bold text-white mb-2 flex items-center gap-2 uppercase tracking-wide">
-                                Insight
+                                洞察
                                 <span class="sparkle text-[12px] text-[var(--accent-primary)]">✦</span>
 </h4>
 <p class="text-sm text-[var(--text-secondary)] leading-relaxed font-medium">
-                            App users with coupon redemption in the last 30d show <span class="text-white font-bold border-b border-[var(--accent-primary)]">40% higher retention</span>.
+                            過去 30 天內兌換優惠券的 App 用戶顯示 <span class="text-white font-bold border-b border-[var(--accent-primary)]">40% 更高的留存率</span>。
                         </p>
 </div>
 </div>
@@ -317,18 +320,18 @@
 <div class="relative z-10 flex flex-col h-full justify-between">
 <div>
 <div class="flex items-center gap-3 mb-6">
-<span class="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-widest border border-[var(--border-subtle)] rounded px-2 py-1">Segment Result</span>
+<span class="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-widest border border-[var(--border-subtle)] rounded px-2 py-1">分群結果</span>
 </div>
 <div class="flex items-baseline gap-4 mb-4">
-<h3 class="text-[120px] leading-none font-bold animate-fade-in relative z-10 text-glow-danger-intense" style="font-feature-settings: 'tnum' on, 'lnum' on;">
+<h3 class="text-[120px] leading-none font-bold animate-fade-in relative z-10 text-glow-danger-intense segment-letter" style="font-feature-settings: 'tnum' on, 'lnum' on;">
                                         B
                                     </h3>
 <div class="flex flex-col mb-4">
-<span class="text-3xl font-bold uppercase tracking-tight text-glow-danger-intense">High Risk</span>
-<span class="text-sm text-[var(--text-secondary)] font-medium">Requires immediate action</span>
+<span class="text-3xl font-bold uppercase tracking-tight text-glow-danger-intense segment-title">高危流失客</span>
+<span class="text-sm text-[var(--text-secondary)] font-medium segment-subtitle">需要立即採取行動</span>
 </div>
 </div>
-<p class="text-[var(--text-secondary)] text-base leading-relaxed max-w-xs font-medium">Customer shows strong signs of disengagement despite previous high-value history.</p>
+<p class="text-[var(--text-secondary)] text-base leading-relaxed max-w-xs font-medium segment-description">顧客顯示強烈的脫離跡象，儘管過去有高價值消費歷史。</p>
 </div>
 <div class="mt-8">
 <div class="flex items-center gap-4 mb-2">
@@ -346,12 +349,12 @@
 <div class="card p-8 flex flex-col justify-between">
 <div class="flex justify-between items-start mb-6">
 <div>
-<h4 class="text-lg font-bold text-white">Churn Probability</h4>
-<p class="text-sm text-[var(--text-secondary)] mt-1 font-medium">AI Prediction Model v2.1</p>
+<h4 class="text-lg font-bold text-white">流失機率</h4>
+<p class="text-sm text-[var(--text-secondary)] mt-1 font-medium">AI 預測模型 v2.1</p>
 </div>
 <div class="flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF4D4D]/10 text-[#FF4D4D] border border-[#FF4D4D]/20 uppercase tracking-wide font-bold shadow-[0_0_10px_rgba(255,77,77,0.2)]">
 <span class="size-2 bg-[#FF4D4D] rounded-full animate-pulse shadow-[0_0_5px_#FF4D4D]"></span>
-<span>Critical</span>
+<span>高風險</span>
 </div>
 </div>
 <div class="flex flex-col items-center justify-center py-4 relative w-full flex-grow">
@@ -369,12 +372,12 @@
 </div>
 <div class="w-full relative h-6 mt-2">
 <div class="absolute top-0 w-0.5 h-3 bg-[var(--text-secondary)] opacity-50" style="left: 30%"></div>
-<div class="absolute top-3 text-[10px] uppercase font-bold tracking-wider text-[var(--text-secondary)] transform -translate-x-1/2" style="left: 30%">30d limit</div>
+<div class="absolute top-3 text-[10px] uppercase font-bold tracking-wider text-[var(--text-secondary)] transform -translate-x-1/2" style="left: 30%">30天臨界點</div>
 </div>
 </div>
 <div class="mt-4 flex items-center gap-3 p-4 rounded-lg bg-[#2C2C2E]/40 border border-white/5">
 <span class="material-symbols-outlined thick text-[20px] text-[var(--text-secondary)]">info</span>
-<p class="text-sm font-medium text-[var(--text-secondary)]">Risk spikes significantly after <span class="text-white font-bold">30 days</span> of inactivity.</p>
+<p class="text-sm font-medium text-[var(--text-secondary)]">風險在 <span class="text-white font-bold">30 天</span> 不活動後顯著上升。</p>
 </div>
 </div>
 </div>
@@ -383,11 +386,11 @@
 <div class="flex items-center gap-4">
 <span class="material-symbols-outlined thick text-[var(--text-secondary)] text-[28px]">strategy</span>
 <div>
-<h3 class="text-xl font-bold text-white tracking-tight">Recommended Strategy</h3>
+<h3 class="text-xl font-bold text-white tracking-tight">推薦策略</h3>
 </div>
 </div>
 <div class="flex gap-3">
-<button class="text-sm font-semibold text-[var(--text-secondary)] hover:text-white transition-colors px-4 py-2 rounded-md hover:bg-white/5 uppercase tracking-wide">Export Plan</button>
+<button class="text-sm font-semibold text-[var(--text-secondary)] hover:text-white transition-colors px-4 py-2 rounded-md hover:bg-white/5 uppercase tracking-wide">匯出計畫</button>
 </div>
 </div>
 <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -396,15 +399,15 @@
 <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors"></div>
 <div class="absolute bottom-3 left-3 backdrop-blur-md bg-black/60 border border-white/10 px-3 py-1 rounded text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
 <span class="material-symbols-outlined text-[16px]">sell</span>
-                                    Discount
+                                    折扣
                                 </div>
 </div>
 <div>
 <h5 class="text-lg font-bold text-white flex items-center gap-2 mb-2">
-                                    Priority Coupon 
+                                    優先優惠券
                                     <span class="material-symbols-outlined thick text-[20px] text-[var(--accent-primary)] shadow-[0_0_10px_var(--accent-primary)] rounded-full">check_circle</span>
 </h5>
-<p class="text-sm text-[var(--text-secondary)] font-medium leading-relaxed">25% off valid for 48h. Triggers immediate return.</p>
+<p class="text-sm text-[var(--text-secondary)] font-medium leading-relaxed strategy-description">發送限時、高折扣的促銷優惠券喚醒消費</p>
 </div>
 </div>
 <div class="flex flex-col gap-4 group cursor-pointer p-4 -m-4 rounded-lg hover:bg-white/5 transition-colors">
@@ -412,14 +415,14 @@
 <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors"></div>
 <div class="absolute bottom-3 left-3 backdrop-blur-md bg-black/60 border border-white/10 px-3 py-1 rounded text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
 <span class="material-symbols-outlined text-[16px]">inventory_2</span>
-                                    Product
+                                    產品
                                 </div>
 </div>
 <div>
 <h5 class="text-lg font-bold text-white flex items-center gap-2 mb-2">
-                                    Flavor Sample
+                                    口味樣品
                                 </h5>
-<p class="text-sm text-[var(--text-secondary)] font-medium leading-relaxed">Complimentary tasting of Seasonal Oolong.</p>
+<p class="text-sm text-[var(--text-secondary)] font-medium leading-relaxed">免費品嚐季節限定烏龍茶。</p>
 </div>
 </div>
 <div class="flex flex-col gap-4 group cursor-pointer p-4 -m-4 rounded-lg hover:bg-white/5 transition-colors">
@@ -427,14 +430,14 @@
 <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors"></div>
 <div class="absolute bottom-3 left-3 backdrop-blur-md bg-black/60 border border-white/10 px-3 py-1 rounded text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
 <span class="material-symbols-outlined text-[16px]">sms</span>
-                                    Channel
+                                    渠道
                                 </div>
 </div>
 <div>
 <h5 class="text-lg font-bold text-white flex items-center gap-2 mb-2">
-                                    SMS Reminder
+                                    SMS 提醒
                                 </h5>
-<p class="text-sm text-[var(--text-secondary)] font-medium leading-relaxed">Personalized "We Miss You" SMS with link.</p>
+<p class="text-sm text-[var(--text-secondary)] font-medium leading-relaxed">個人化「我們想念您」簡訊附帶連結。</p>
 </div>
 </div>
 </div>
@@ -442,7 +445,7 @@
 <div class="bg-[var(--accent-primary)]/10 rounded-lg border border-[var(--accent-primary)]/20 p-4 flex items-center justify-between shadow-[0_0_15px_rgba(142,255,51,0.05)]">
 <div class="flex items-center gap-3">
 <span class="material-symbols-outlined thick text-[24px] text-[var(--accent-primary)]">trending_up</span>
-<span class="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wide">Projected Retention Lift</span>
+<span class="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wide">預估留存提升</span>
 </div>
 <span class="text-2xl font-bold text-glow-electric-green font-mono">+18.5%</span>
 </div>
@@ -451,4 +454,141 @@
 </div>
 </div>
 </main>
+<script>
+// Segment definitions
+const segments = {
+    A: {
+        letter: 'A',
+        title: '群體 A（傳統型顧客）',
+        subtitle: '穩定但成長緩慢',
+        description: '顧客偏好傳統消費模式，對數位工具接受度較低。',
+        strategy: '推出實體集點卡，讓他們也能累積點數換飲料',
+        churnProbability: 32,
+        riskLevel: '低風險',
+        riskColor: 'text-glow-electric-green',
+        similarProfiles: 28
+    },
+    B: {
+        letter: 'B',
+        title: '群體 B（高危流失客）',
+        subtitle: '需要立即採取行動',
+        description: '顧客顯示強烈的脫離跡象，儘管過去有高價值消費歷史。',
+        strategy: '發送限時、高折扣的促銷優惠券喚醒消費',
+        churnProbability: 78,
+        riskLevel: '高風險',
+        riskColor: 'text-glow-danger-intense',
+        similarProfiles: 42
+    },
+    C: {
+        letter: 'C',
+        title: '群體 C（主力潛力客）',
+        subtitle: '高價值成長機會',
+        description: '顧客展現高度參與與消費潛力，是品牌忠誠度培養重點。',
+        strategy: '推廣 VIP 儲值卡與專屬升級活動，加深粉絲黏著度',
+        churnProbability: 15,
+        riskLevel: '低風險',
+        riskColor: 'text-glow-electric-green',
+        similarProfiles: 56
+    }
+};
+
+// DOM elements
+const lastVisitSlider = document.querySelector('input[type="range"]');
+const appUsageRadios = document.querySelectorAll('input[name="app_usage"]');
+const couponToggle = document.querySelector('input[type="checkbox"]');
+const segmentLetter = document.querySelector('.segment-letter');
+const segmentTitle = document.querySelector('.segment-title');
+const segmentSubtitle = document.querySelector('.segment-subtitle');
+const segmentDescription = document.querySelector('.segment-description');
+const strategyDescription = document.querySelector('.strategy-description');
+const churnProbabilityValue = document.querySelector('.text-7xl');
+const churnProbabilityBar = document.querySelector('.h-full');
+const riskLevelBadge = document.querySelector('.flex.items-center.gap-2.px-3.py-1.rounded-full');
+const similarProfilesCount = document.querySelector('.size-10.bg-\\[\\#2C2C2E\\]');
+
+// Update display values
+function updateDisplay() {
+    const lastVisitDays = parseInt(lastVisitSlider.value);
+    const appUsage = document.querySelector('input[name="app_usage"]:checked').value;
+    const couponRedeemed = couponToggle.checked;
+    
+    // Determine segment based on logic
+    let segment;
+    if (lastVisitDays <= 30 && appUsage === 'installed' && couponRedeemed) {
+        segment = segments.C; // Active engaged users
+    } else if (lastVisitDays > 60 && appUsage === 'none' && !couponRedeemed) {
+        segment = segments.B; // High risk churn
+    } else {
+        segment = segments.A; // Traditional customers
+    }
+    
+    // Update segment display
+    segmentLetter.textContent = segment.letter;
+    segmentTitle.textContent = segment.title;
+    segmentSubtitle.textContent = segment.subtitle;
+    segmentDescription.textContent = segment.description;
+    
+    // Update strategy
+    strategyDescription.textContent = segment.strategy;
+    
+    // Update churn probability
+    churnProbabilityValue.innerHTML = `${segment.churnProbability}<span class="text-3xl text-[var(--text-secondary)] font-light text-shadow-none">%</span>`;
+    churnProbabilityBar.style.width = `${segment.churnProbability}%`;
+    
+    // Update risk level badge
+    const riskSpan = riskLevelBadge.querySelector('span:last-child');
+    riskSpan.textContent = segment.riskLevel;
+    
+    // Update similar profiles count
+    if (similarProfilesCount) {
+        similarProfilesCount.textContent = `+${segment.similarProfiles}`;
+    }
+    
+    // Update last visit display
+    const lastVisitDisplay = document.querySelector('.font-mono.text-xl');
+    if (lastVisitDisplay) {
+        lastVisitDisplay.textContent = `${lastVisitDays}d`;
+    }
+}
+
+// Add event listeners for real-time updates
+lastVisitSlider.addEventListener('input', updateDisplay);
+appUsageRadios.forEach(radio => radio.addEventListener('change', updateDisplay));
+couponToggle.addEventListener('change', updateDisplay);
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', updateDisplay);
+
+// Add visual feedback for real-time updates
+let updateCount = 0;
+const liveIndicator = document.createElement('div');
+liveIndicator.className = 'fixed bottom-4 right-4 bg-[var(--accent-primary)] text-black text-xs font-bold px-3 py-1 rounded-full opacity-0 transition-opacity duration-300 z-50';
+liveIndicator.textContent = '更新中...';
+document.body.appendChild(liveIndicator);
+
+function showUpdateIndicator() {
+    updateCount++;
+    liveIndicator.style.opacity = '1';
+    liveIndicator.textContent = `即時更新 #${updateCount}`;
+    setTimeout(() => {
+        liveIndicator.style.opacity = '0';
+    }, 1000);
+}
+
+// Enhance event listeners with visual feedback
+lastVisitSlider.addEventListener('input', () => {
+    updateDisplay();
+    showUpdateIndicator();
+});
+
+appUsageRadios.forEach(radio => radio.addEventListener('change', () => {
+    updateDisplay();
+    showUpdateIndicator();
+}));
+
+couponToggle.addEventListener('change', () => {
+    updateDisplay();
+    showUpdateIndicator();
+});
+</script>
 </body></html>

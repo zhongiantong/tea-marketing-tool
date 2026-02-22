@@ -514,21 +514,41 @@ function updateDisplay() {
     segmentSubtitle.textContent = segment.subtitle;
     segmentDescription.textContent = segment.description;
     
-    // Update strategy with dynamic recommendations
-    let strategyText = segment.strategy;
+    // ===== 更新推薦策略 (三個框框動態打勾版) =====
     
-    // 1. 群體 C 專屬福利
-    if (segment.letter === 'C') {
-        strategyText += '<br><br><span class="text-[var(--accent-primary)] font-bold">✅ 專屬福利：提供免費飲料 (Free Drink)</span>';
+    // 1. 確保上方那句簡短的文字描述依然正常顯示
+    strategyDescription.textContent = segment.strategy;
+
+    // 2. 抓取那三個框框的標題 (H5)
+    const strategyTitles = document.querySelectorAll('.grid.grid-cols-1.md\\:grid-cols-3 h5');
+    
+    // 定義發光打勾勾的 HTML (綠色與紅色警告)
+    const greenCheck = `<span class="material-symbols-outlined thick text-[20px] text-[var(--accent-primary)] shadow-[0_0_10px_var(--accent-primary)] rounded-full">check_circle</span>`;
+    const redCheck = `<span class="material-symbols-outlined thick text-[20px] text-[#FF4D4D] shadow-[0_0_10px_#FF4D4D] rounded-full">check_circle</span>`;
+
+    // 3. 每次更新前，先把它們重置回沒有打勾的乾淨狀態
+    if (strategyTitles.length >= 3) {
+        strategyTitles[0].innerHTML = '優先優惠券';
+        strategyTitles[1].innerHTML = '口味樣品';
+        strategyTitles[2].innerHTML = 'SMS 提醒';
+
+        // 4. 開始根據條件動態打勾！
+        
+        // 如果是群體 B (高危流失客) -> 勾選「優先優惠券」
+        if (segment.letter === 'B') {
+            strategyTitles[0].innerHTML = '優先優惠券 ' + greenCheck;
+        }
+
+        // 如果是群體 C (主力潛力客) -> 勾選「口味樣品 (免費飲料)」
+        if (segment.letter === 'C') {
+            strategyTitles[1].innerHTML = '口味樣品 ' + greenCheck;
+        }
+
+        // 如果超過 40 天沒來 -> 強制勾選「SMS 提醒 (紅色警告勾勾)」
+        if (lastVisitDays >= 40) {
+            strategyTitles[2].innerHTML = 'SMS 提醒 ' + redCheck;
+        }
     }
-    
-    // 2. 高危險喚醒機制 (Last Visit ≥ 40 天)
-    if (lastVisitDays >= 40) {
-        strategyText += '<br><br><span class="text-[#FF4D4D] font-bold">✅ 高危預警：發送喚醒簡訊 (SMS)</span>';
-    }
-    
-    // 注意這裡是用 innerHTML，這樣 HTML 標籤跟換行才會生效！
-    strategyDescription.innerHTML = strategyText;
     
     // Update risk level badge based on last visit days
     const riskSpan = riskLevelBadge.querySelector('span:last-child');

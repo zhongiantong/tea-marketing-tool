@@ -514,20 +514,21 @@ function updateDisplay() {
     segmentSubtitle.textContent = segment.subtitle;
     segmentDescription.textContent = segment.description;
     
-    // Update strategy with dynamic recommendations (純文字字串串接)
+    // Update strategy with dynamic recommendations
     let strategyText = segment.strategy;
     
     // 1. 群體 C 專屬福利
     if (segment.letter === 'C') {
-        strategyText += '\n✅ 專屬福利：提供免費飲料 (Free Drink)';
+        strategyText += '<br><br><span class="text-[var(--accent-primary)] font-bold">✅ 專屬福利：提供免費飲料 (Free Drink)</span>';
     }
     
     // 2. 高危險喚醒機制 (Last Visit ≥ 40 天)
     if (lastVisitDays >= 40) {
-        strategyText += '\n✅ 高危預警：發送喚醒簡訊 (SMS)';
+        strategyText += '<br><br><span class="text-[#FF4D4D] font-bold">✅ 高危預警：發送喚醒簡訊 (SMS)</span>';
     }
     
-    strategyDescription.textContent = strategyText;
+    // 注意這裡是用 innerHTML，這樣 HTML 標籤跟換行才會生效！
+    strategyDescription.innerHTML = strategyText;
     
     // Update risk level badge based on last visit days
     const riskSpan = riskLevelBadge.querySelector('span:last-child');

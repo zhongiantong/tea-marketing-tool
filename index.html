@@ -200,21 +200,7 @@
 <span class="ml-2 px-2 py-0.5 rounded text-xs font-bold bg-[var(--border-subtle)] text-[var(--text-secondary)] border border-white/5 tracking-wider self-start mt-1">BETA</span>
 </div>
 <div class="flex items-center gap-5">
-<button class="text-[var(--text-secondary)] hover:text-white transition-colors">
-<span class="material-symbols-outlined thick text-[28px]">search</span>
-</button>
-<button class="text-[var(--text-secondary)] hover:text-white transition-colors relative">
-<span class="material-symbols-outlined thick text-[28px]">notifications</span>
-<span class="absolute top-0 right-0 size-2.5 bg-[var(--accent-primary)] rounded-full animate-pulse ring-2 ring-[var(--bg-page)] shadow-[0_0_8px_var(--accent-primary)]"></span>
-</button>
-<div class="h-8 w-px bg-[var(--border-subtle)] mx-2"></div>
-<div class="flex items-center gap-3 pl-1 cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors">
-<div class="size-10 rounded-full bg-cover bg-center border-2 border-[var(--border-subtle)]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCShpQ1UvfmS8A_98nJJRDF0leKZFEBsrem7ZszqqyBW6x_DBhF8DZkik2-xcs-o8jVZW215hnDqaBZH1Eo--hdvnpjdOv9xN9OPWEysDSvTsHXqAYkzZmhnhx-Vr4inDYevGKTLN9wZ0c4DXjSziMOq2vnbI7gLdvVF0-gvD-1bGpwq6ml5XBL7lz27HYfW7Vyhol1iY4QdcOtV2S-HjRLv_O3bZcH-KuqP8quhNBuAxTiKE9ktjPFQ3nz8viPmVJ9IOP5RMR6HMkN')"></div>
-<div class="flex flex-col hidden sm:flex">
-<span class="text-sm font-bold text-white">Sarah Chen</span>
-<span class="text-[10px] text-[var(--text-secondary)] uppercase tracking-wide">Admin</span>
-</div>
-</div>
+<!-- 裝飾性 UI 元素已移除 -->
 </div>
 </div>
 </div>
@@ -258,20 +244,22 @@
 </div>
 </div>
 <div class="space-y-4 pt-2">
-<label class="text-lg font-semibold text-white block">App 使用</label>
-<div class="grid grid-cols-2 gap-4">
-<label class="cursor-pointer group h-full">
-<input checked="" class="peer sr-only" name="app_usage" type="radio" value="installed"/>
-<div class="flex flex-col items-center justify-center gap-3 py-4 px-4 rounded-lg border-2 border-[var(--border-subtle)] bg-[var(--bg-page)] text-[var(--text-secondary)] peer-checked:bg-[#2C2C2E] peer-checked:border-white peer-checked:text-white transition-all hover:border-[#555]">
-<span class="material-symbols-outlined thick text-[36px]">smartphone</span>
-<span class="text-sm font-bold uppercase tracking-wide">已安裝</span>
+<label class="text-lg font-semibold text-white block">App 使用狀態</label>
+<div class="flex rounded-lg border-2 border-[var(--border-subtle)] bg-[var(--bg-page)] p-1">
+<label class="flex-1 cursor-pointer">
+<input checked class="peer sr-only" name="app_usage" type="radio" value="installed"/>
+<div class="flex flex-col items-center justify-center gap-2 py-4 rounded-md transition-all peer-checked:bg-[var(--bg-card)] peer-checked:border-2 peer-checked:border-[var(--accent-primary)] peer-checked:shadow-[0_0_20px_rgba(142,255,51,0.3)] peer-checked:text-white">
+<span class="material-symbols-outlined thick text-[32px] text-[var(--accent-primary)]">check_circle</span>
+<span class="text-base font-bold">✅ 有使用 APP</span>
+<span class="text-xs text-[var(--text-secondary)] mt-1">已安裝並活躍</span>
 </div>
 </label>
-<label class="cursor-pointer group h-full">
+<label class="flex-1 cursor-pointer">
 <input class="peer sr-only" name="app_usage" type="radio" value="none"/>
-<div class="flex flex-col items-center justify-center gap-3 py-4 px-4 rounded-lg border-2 border-[var(--border-subtle)] bg-[var(--bg-page)] text-[var(--text-secondary)] peer-checked:bg-[#2C2C2E] peer-checked:border-white peer-checked:text-white transition-all hover:border-[#555]">
-<span class="material-symbols-outlined thick text-[36px]">mobile_off</span>
-<span class="text-sm font-bold uppercase tracking-wide">未使用</span>
+<div class="flex flex-col items-center justify-center gap-2 py-4 rounded-md transition-all peer-checked:bg-[var(--bg-card)] peer-checked:border-2 peer-checked:border-[#FF4D4D] peer-checked:shadow-[0_0_20px_rgba(255,77,77,0.3)] peer-checked:text-white">
+<span class="material-symbols-outlined thick text-[32px] text-[#FF4D4D]">cancel</span>
+<span class="text-base font-bold">❌ 無 APP</span>
+<span class="text-xs text-[var(--text-secondary)] mt-1">未安裝或未使用</span>
 </div>
 </label>
 </div>
@@ -323,7 +311,7 @@
 <span class="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-widest border border-[var(--border-subtle)] rounded px-2 py-1">分群結果</span>
 </div>
 <div class="flex items-baseline gap-4 mb-4">
-<h3 class="text-[120px] leading-none font-bold animate-fade-in relative z-10 text-glow-danger-intense segment-letter" style="font-feature-settings: 'tnum' on, 'lnum' on;">
+<h3 id="tier-letter" class="text-[120px] leading-none font-bold animate-fade-in relative z-10 text-glow-danger-intense segment-letter" style="font-feature-settings: 'tnum' on, 'lnum' on;">
                                         B
                                     </h3>
 <div class="flex flex-col mb-4">
@@ -389,9 +377,7 @@
 <h3 class="text-xl font-bold text-white tracking-tight">推薦策略</h3>
 </div>
 </div>
-<div class="flex gap-3">
-<button class="text-sm font-semibold text-[var(--text-secondary)] hover:text-white transition-colors px-4 py-2 rounded-md hover:bg-white/5 uppercase tracking-wide">匯出計畫</button>
-</div>
+<!-- 匯出計畫按鈕已移除 -->
 </div>
 <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
 <div class="flex flex-col gap-4 group cursor-pointer p-4 -m-4 rounded-lg hover-lift-glow hover:bg-white/5 transition-colors">
@@ -496,13 +482,13 @@ const segments = {
 const lastVisitSlider = document.querySelector('input[type="range"]');
 const appUsageRadios = document.querySelectorAll('input[name="app_usage"]');
 const couponToggle = document.querySelector('input[type="checkbox"]');
-const segmentLetter = document.querySelector('.segment-letter');
+const segmentLetter = document.getElementById('tier-letter');
 const segmentTitle = document.querySelector('.segment-title');
 const segmentSubtitle = document.querySelector('.segment-subtitle');
 const segmentDescription = document.querySelector('.segment-description');
 const strategyDescription = document.querySelector('.strategy-description');
-const churnProbabilityValue = document.querySelector('.text-7xl');
-const churnProbabilityBar = document.querySelector('.h-full');
+const churnProbabilityValue = document.querySelector('.text-center .text-7xl');
+const churnProbabilityBar = document.querySelector('.h-full.bg-gradient-to-r');
 const riskLevelBadge = document.querySelector('.flex.items-center.gap-2.px-3.py-1.rounded-full');
 const similarProfilesCount = document.querySelector('.size-10.bg-\\[\\#2C2C2E\\]');
 
@@ -531,13 +517,43 @@ function updateDisplay() {
     // Update strategy
     strategyDescription.textContent = segment.strategy;
     
-    // Update churn probability
-    churnProbabilityValue.innerHTML = `${segment.churnProbability}<span class="text-3xl text-[var(--text-secondary)] font-light text-shadow-none">%</span>`;
-    churnProbabilityBar.style.width = `${segment.churnProbability}%`;
-    
-    // Update risk level badge
+    // Update risk level badge based on last visit days
     const riskSpan = riskLevelBadge.querySelector('span:last-child');
-    riskSpan.textContent = segment.riskLevel;
+    const riskDot = riskLevelBadge.querySelector('.size-2');
+    
+    // Calculate dynamic churn probability based on formula
+    let churnProbability;
+    if (lastVisitDays > 30) {
+        // High risk - red warning
+        riskSpan.textContent = '⚠️ 高危險流失客';
+        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF3333]/20 text-[#FF3333] border border-[#FF3333]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(255,51,51,0.4)]';
+        riskDot.className = 'size-2 bg-[#FF3333] rounded-full animate-pulse shadow-[0_0_8px_#FF3333]';
+        
+        // Update churn probability bar to red gradient
+        churnProbabilityBar.className = 'h-full bg-gradient-to-r from-red-500 via-[#FF3333] to-red-700 rounded-full relative overflow-hidden shadow-[0_0_30px_rgba(255,51,51,0.9)]';
+        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-danger-intense';
+        
+        // Formula: 60 + ((Last Visit - 30) × 1.5) %, max 98%
+        churnProbability = 60 + ((lastVisitDays - 30) * 1.5);
+        churnProbability = Math.min(98, Math.round(churnProbability));
+    } else {
+        // Low risk - green safe
+        riskSpan.textContent = '✅ 活躍安全客';
+        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(142,255,51,0.3)]';
+        riskDot.className = 'size-2 bg-[var(--accent-primary)] rounded-full animate-pulse shadow-[0_0_8px_var(--accent-primary)]';
+        
+        // Update churn probability bar to green gradient
+        churnProbabilityBar.className = 'h-full bg-gradient-to-r from-green-500 via-[var(--accent-primary)] to-green-600 rounded-full relative overflow-hidden shadow-[0_0_30px_rgba(142,255,51,0.6)]';
+        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-electric-green';
+        
+        // Formula: (Last Visit × 1.2) %, max 36%
+        churnProbability = lastVisitDays * 1.2;
+        churnProbability = Math.min(36, Math.round(churnProbability));
+    }
+    
+    // Update churn probability value and width
+    churnProbabilityValue.innerHTML = `${churnProbability}<span class="text-3xl text-[var(--text-secondary)] font-light text-shadow-none">%</span>`;
+    churnProbabilityBar.style.width = `${churnProbability}%`;
     
     // Update similar profiles count
     if (similarProfilesCount) {

@@ -427,6 +427,47 @@
 </div>
 </div>
 </div>
+<!-- 行銷行動建議自動打勾選項 -->
+<div class="px-8 py-6 border-t border-[var(--border-subtle)]">
+<div class="mb-4">
+<h4 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined thick text-[var(--accent-primary)]">checklist</span>
+行銷行動建議
+</h4>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-[var(--accent-primary)]/10 flex items-center justify-center">
+<span class="material-symbols-outlined thick text-[var(--accent-primary)]">local_cafe</span>
+</div>
+<div>
+<h5 class="font-bold text-white">免費飲料 (Free Drink)</h5>
+<p class="text-sm text-[var(--text-secondary)]">群體 C 專屬福利</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input id="free-drink-checkbox" class="sr-only peer" type="checkbox"/>
+<div class="w-14 h-8 bg-[#2C2C2E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[var(--accent-primary)] peer-checked:shadow-[0_0_15px_var(--accent-primary)]"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-4 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-[#FF4D4D]/10 flex items-center justify-center">
+<span class="material-symbols-outlined thick text-[#FF4D4D]">sms</span>
+</div>
+<div>
+<h5 class="font-bold text-white">發送簡訊 (SMS)</h5>
+<p class="text-sm text-[var(--text-secondary)]">高危險喚醒機制</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input id="sms-checkbox" class="sr-only peer" type="checkbox"/>
+<div class="w-14 h-8 bg-[#2C2C2E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#FF4D4D] peer-checked:shadow-[0_0_15px_#FF4D4D]"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
 <div class="px-8 pb-6 pt-2">
 <div class="bg-[var(--accent-primary)]/10 rounded-lg border border-[var(--accent-primary)]/20 p-4 flex items-center justify-between shadow-[0_0_15px_rgba(142,255,51,0.05)]">
 <div class="flex items-center gap-3">
@@ -491,6 +532,8 @@ const churnProbabilityValue = document.querySelector('.text-center .text-7xl');
 const churnProbabilityBar = document.querySelector('.h-full.bg-gradient-to-r');
 const riskLevelBadge = document.querySelector('.flex.items-center.gap-2.px-3.py-1.rounded-full');
 const similarProfilesCount = document.querySelector('.size-10.bg-\\[\\#2C2C2E\\]');
+const freeDrinkCheckbox = document.getElementById('free-drink-checkbox');
+const smsCheckbox = document.getElementById('sms-checkbox');
 
 // Update display values
 function updateDisplay() {
@@ -564,6 +607,17 @@ function updateDisplay() {
     const lastVisitDisplay = document.querySelector('.font-mono.text-xl');
     if (lastVisitDisplay) {
         lastVisitDisplay.textContent = `${lastVisitDays}d`;
+    }
+    
+    // 行銷行動建議自動打勾邏輯
+    // 1. 群體 C 專屬福利：免費飲料
+    if (freeDrinkCheckbox) {
+        freeDrinkCheckbox.checked = (segment.letter === 'C');
+    }
+    
+    // 2. 高危險喚醒機制：發送簡訊 (Last Visit ≥ 40 天)
+    if (smsCheckbox) {
+        smsCheckbox.checked = (lastVisitDays >= 40);
     }
 }
 

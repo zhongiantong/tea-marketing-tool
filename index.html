@@ -479,14 +479,20 @@ function updateDisplay() {
     const appUsage = document.querySelector('input[name="app_usage"]:checked').value;
     const couponRedeemed = couponToggle.checked;
     
-    // 1. 判斷群體 (A/B/C)
+    // 1. 判斷群體 (A/B/C) - 修正後的合理邏輯
     let segment;
-    if (lastVisitDays <= 30 && appUsage === 'installed' && couponRedeemed) {
-        segment = segments.C; // 主力客
-    } else if (lastVisitDays > 60 && appUsage === 'none' && !couponRedeemed) {
-        segment = segments.B; // 高危客
-    } else {
-        segment = segments.A; // 傳統客
+    
+    // 條件 1：只要太久沒來 (例如大於等於 40 天)，不管是誰，都是「高危流失客 B」
+    if (lastVisitDays >= 40) {
+        segment = segments.B; 
+    } 
+    // 條件 2：近期有來 (<40天)，而且「有使用 APP」，就是「主力潛力客 C」 (不管有沒有兌換優惠券)
+    else if (appUsage === 'installed') {
+        segment = segments.C; 
+    } 
+    // 條件 3：近期有來 (<40天)，但是「無 APP」，就是「傳統型顧客 A」
+    else {
+        segment = segments.A; 
     }
     
     // 2. 更新左側群體顯示

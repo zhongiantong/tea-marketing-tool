@@ -441,44 +441,44 @@
 </div>
 </main>
 <script>
-// 1. 定義顏色 Tick
+// 1. 定義顏色 Tick (保持風格)
 const tickRed = '<span class="material-symbols-outlined thick text-[20px] text-[#FF4D4D] ml-2" style="vertical-align: middle;">check_circle</span>';
 const tickGreen = '<span class="material-symbols-outlined thick text-[20px] text-[var(--accent-primary)] ml-2" style="vertical-align: middle;">check_circle</span>';
 const tickCyan = '<span class="material-symbols-outlined thick text-[20px] text-cyan-400 ml-2" style="vertical-align: middle;">stars</span>';
 
-// 2. 數據定義 (標題 h 保持乾淨)
+// 2. 數據定義 (根據大佬提供的 DataFrame 數據更新)
 const segments = {
     C0: {
-        letter: '0', title: '群體 0（傳統型顧客）', 
-        subtitle: '人數：114 人 | 流失率：36.8%',
-        description: '這群人完全不用 APP，無法接收推播，但每月來 8 次左右，貢獻度不低。',
+        letter: '0', title: '群體 0：傳統顧客', 
+        subtitle: '流失率：37% | 月均到訪：8.18次',
+        description: '這群人完全不用 APP (uses_app: 0)，無法接收推播，平均半年消費約 $3,694。',
         strategy: '推薦策略：傳統客群專屬維護計畫',
         boxes: [
-            { h: '優先優惠券 (折扣)', p: '推出實體集點卡，讓傳統顧客也能累積點數換領優先優惠券。' },
-            { h: '口味樣品 (產品)', p: '由於流失率高達 37%，建議提供季節限定試飲，增加到店誘因。' },
-            { h: 'SMS 提醒 (渠道)', p: '針對無 APP 客群，個人化 SMS 是唯一觸達手段。' }
+            { h: '優先優惠券 (折扣)', p: '發放實體集點卡或紙本優惠券，讓非數位用戶也能享有折扣誘因。' },
+            { h: '口味樣品 (產品)', p: '利用店內購買時提供試飲樣品，對抗 37% 的高流失風險。' },
+            { h: 'SMS 提醒 (渠道)', p: '針對無 APP 客群，個人化 SMS 是唯一能遠距觸達的數位手段。' }
         ]
     },
     C1: {
-        letter: '1', title: '群體 1（預測流失轉化）', 
-        subtitle: '人數：173 人 | 流失率：18.5%',
-        description: '核心主力，需針對預測模型中顯示的關鍵特徵進行主動挽回。',
-        strategy: '推薦策略：高危流失客緊急挽回計畫',
+        letter: '1', title: '群體 1：數位型顧客', 
+        subtitle: '流失率：18% | 月均到訪：7.91次',
+        description: 'APP 活躍用戶 (uses_app: 1)，消費行為穩定，半年貢獻約 $3,588。',
+        strategy: '推薦策略：數位留存與轉化計畫',
         boxes: [
-            { h: '優先優惠券 (折扣)', p: '發送限時、高折扣的促銷優惠券，挽回模型預測中漏掉的 9 個真流失客。' },
-            { h: '口味樣品 (產品)', p: '配合到訪天數權重 (0.27) 分析，在流失臨界點前提供樣品兌換。' },
-            { h: 'SMS 提醒 (渠道)', p: '對於已安裝 App 但久未使用的用戶，輔以 SMS 確保觸達。' }
+            { h: '優先優惠券 (折扣)', p: '透過 APP 推播限時折扣券，挽回這群對數位活動有反應的顧客。' },
+            { h: '口味樣品 (產品)', p: '提供 APP 專屬樣品兌換券，利用到訪權重預防潛在流失。' },
+            { h: 'SMS 提醒 (渠道)', p: '僅在 APP 推播未讀取或久未到店時，作為輔助觸達手段。' }
         ]
     },
     C2: {
-        letter: '2', title: '群體 2（年齡精準行銷）', 
-        subtitle: '人數：1 人 | 流失率：0.0%',
-        description: '極度穩定。Age 權重 0.15，代表年齡對預測很有幫助。',
-        strategy: '推薦策略：主力客群尊榮升級計畫',
+        letter: '2', title: '群體 2：高貢獻顧客', 
+        subtitle: '流失率：0% | 月均到訪：30.0次',
+        description: 'VIP 級別。月到訪高達 30 次，半年消費額 $108,000，極度忠誠。',
+        strategy: '推薦策略：頂級 VIP 尊榮維護計畫',
         boxes: [
-            { h: '優先優惠券 (折扣)', p: '推廣 VIP 儲值卡與年齡專屬活動，加深黏著度。' },
-            { h: '口味樣品 (產品)', p: '提供 VIP 專屬福利：優先免費品嚐季節限定新產品。' },
-            { h: 'SMS 提醒 (渠道)', p: '發送尊榮感十足的個人化節慶祝福或活動邀請連結。' }
+            { h: '優先優惠券 (折扣)', p: '提供免排隊券或大額儲值回饋，維持其 100% 的促銷參與率。' },
+            { h: '口味樣品 (產品)', p: '專屬福利：新產品上市前，由店長親自邀請優先品嚐。' },
+            { h: 'SMS 提醒 (渠道)', p: '發送私人管家式服務訊息，而非一般的群發行銷廣告。' }
         ]
     }
 };
@@ -498,43 +498,54 @@ function updateDisplay() {
     const lastVisitDays = parseInt(lastVisitSlider.value);
     const appUsage = document.querySelector('input[name="app_usage"]:checked').value;
     
+    // 3. 判定邏輯優化
     let segment;
-    if (lastVisitDays === 0) { segment = segments.C2; } 
-    else if (lastVisitDays <= 30 && appUsage !== 'none') { segment = segments.C1; } 
-    else { segment = segments.C0; }
+    if (lastVisitDays <= 7 && appUsage === 'installed') { 
+        // 頻繁到訪且有App，極大機率是高貢獻客 (C2)
+        segment = segments.C2; 
+    } 
+    else if (appUsage === 'none') { 
+        // 無 App 一律劃分為傳統客 (C0)
+        segment = segments.C0; 
+    } 
+    else { 
+        // 其餘為數位型客群 (C1)
+        segment = segments.C1; 
+    }
     
+    // 更新 UI 文字
     if(segmentLetter) segmentLetter.textContent = segment.letter;
     if(segmentTitle) segmentTitle.textContent = segment.title;
     if(segmentSubtitle) segmentSubtitle.textContent = segment.subtitle;
     if(segmentDescription) segmentDescription.textContent = segment.description;
     if(strategyDescription) strategyDescription.textContent = segment.strategy;
     
-    // UI 顏色與流失率更新 (保持不變)
+    // 4. UI 顏色與流失率顯示
     const riskSpan = riskLevelBadge.querySelector('span:last-child');
     if (segment.letter === '2') {
         riskSpan.textContent = '極度穩定 (0.0%)';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-bold';
         churnProbabilityBar.className = 'h-full bg-cyan-500 rounded-full';
-        churnProbabilityBar.style.width = '2%';
+        churnProbabilityBar.style.width = '2%'; // 視覺保留一點點
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter text-cyan-300';
         churnProbabilityValue.innerHTML = `0<span class="text-3xl font-light">%</span>`;
     } else if (segment.letter === '1') {
-        riskSpan.textContent = '表現穩定 (18.5%)';
+        riskSpan.textContent = '表現穩定 (18.0%)';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 font-bold';
         churnProbabilityBar.className = 'h-full bg-[var(--accent-primary)] rounded-full';
-        churnProbabilityBar.style.width = '18.5%';
+        churnProbabilityBar.style.width = '18%';
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter text-[var(--accent-primary)]';
-        churnProbabilityValue.innerHTML = `18.5<span class="text-3xl font-light">%</span>`;
+        churnProbabilityValue.innerHTML = `18<span class="text-3xl font-light">%</span>`;
     } else {
-        riskSpan.textContent = '高流失警報 (36.8%)';
+        riskSpan.textContent = '高流失警報 (37.0%)';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF3333]/20 text-[#FF3333] border border-[#FF3333]/30 font-bold';
         churnProbabilityBar.className = 'h-full bg-[#FF3333] rounded-full';
-        churnProbabilityBar.style.width = '36.8%';
+        churnProbabilityBar.style.width = '37%';
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter text-[#FF3333]';
-        churnProbabilityValue.innerHTML = `36.8<span class="text-3xl font-light">%</span>`;
+        churnProbabilityValue.innerHTML = `37<span class="text-3xl font-light">%</span>`;
     }
 
-    // 更新下方策略格 (加入群體 2 的優待邏輯)
+    // 5. 更新推薦策略 Tick
     const strategyGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3');
     if (strategyGrid) {
         const h5s = strategyGrid.querySelectorAll('h5');
@@ -544,28 +555,16 @@ function updateDisplay() {
                 let currentTick = '';
 
                 if (index === 0) { // 優先優惠券
-                    // 如果係群體 2，無論幾多日都打勾 (VIP)；其他群體要 > 15 日
-                    if (segment.letter === '2') {
-                        currentTick = tickCyan;
-                    } else if (lastVisitDays > 15) {
-                        currentTick = (segment.letter === '0' ? tickRed : tickGreen);
-                    }
+                    if (segment.letter === '2') currentTick = tickCyan;
+                    else if (lastVisitDays > 10) currentTick = (segment.letter === '0' ? tickRed : tickGreen);
                 } 
                 else if (index === 1) { // 口味樣品
-                    // 群體 2 必有星號；群體 1 (主力) 必有綠勾；群體 0 有需要才給 (天數 > 7)
-                    if (segment.letter === '2') {
-                        currentTick = tickCyan;
-                    } else if (segment.letter === '1') {
-                        currentTick = tickGreen;
-                    } else if (lastVisitDays > 7) {
-                        currentTick = tickRed;
-                    }
+                    if (segment.letter === '2') currentTick = tickCyan;
+                    else if (segment.letter === '1') currentTick = tickGreen;
+                    else if (lastVisitDays > 7) currentTick = tickRed;
                 } 
                 else if (index === 2) { // SMS 提醒
-                    // 只有真係好耐無見 (天數 > 30) 先建議用 SMS 打擾顧客
-                    if (lastVisitDays > 30) {
-                        currentTick = tickRed;
-                    }
+                    if (lastVisitDays > 30 || segment.letter === '0') currentTick = tickRed;
                 }
 
                 h5s[index].innerHTML = box.h + currentTick;

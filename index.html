@@ -441,22 +441,31 @@
 </div>
 </main>
 <script>
-// 根據你 Colab 真實跑出嚟嘅結果：0群(114人), 1群(173人), 2群(1人)
+// 完全根據 Colab 真實流失率數據：
+// 群體0: 114人, 流失率 36.8% (高危險)
+// 群體1: 173人, 流失率 18.5% (較穩定)
+// 群體2: 1人, 流失率 0.0% (極端值)
 const segments = {
     C0: {
-        letter: '0', title: 'Cluster 0（活躍主力客）', subtitle: '共 114 人',
-        description: '穩定的顧客群體，近期有來消費且多數有使用App，是品牌的核心收入來源。',
-        strategy: '推薦策略：推廣 VIP 儲值與常規促銷'
+        letter: '0', 
+        title: '群體 0（高流失風險）', 
+        subtitle: '人數：114 人 | 流失率：36.8%',
+        description: '此群體流失比例達 36.8%，屬於高風險客群，需要立即的挽回措施以避免顧客流失。',
+        strategy: '推薦策略：發送喚醒簡訊與高折扣優惠券'
     },
     C1: {
-        letter: '1', title: 'Cluster 1（高危流失客）', subtitle: '共 173 人',
-        description: '佔比最大的顧客群，特徵是太久沒來或沒用App，包含大量潛在流失客，需重點關注。',
-        strategy: '推薦策略：發送喚醒簡訊與限時高折扣優惠券'
+        letter: '1', 
+        title: '群體 1（穩定主力客）', 
+        subtitle: '人數：173 人 | 流失率：18.5%',
+        description: '佔比最大的顧客群，流失率較低（18.5%），屬於相對活躍的主力，應著重於提升客單價與忠誠度。',
+        strategy: '推薦策略：常規促銷與 VIP 專屬福利'
     },
     C2: {
-        letter: '2', title: 'Cluster 2（極端異常客）', subtitle: '僅 1 人 (Outlier)',
-        description: '數據顯示極端異常的單一顧客，可能是超級 VVIP 或前面階段未清乾淨的錯誤數據。',
-        strategy: '推薦策略：排除於自動化行銷外，交由人工獨立評估'
+        letter: '2', 
+        title: '群體 2（極端異常客）', 
+        subtitle: '人數：1 人 | 流失率：0.0%',
+        description: '僅有 1 筆資料，流失率 0%，為極端異常值 (Outlier)，可能是輸入錯誤或超級 VVIP。',
+        strategy: '推薦策略：不進行自動化行銷，交由人工獨立檢視'
     }
 };
 
@@ -473,25 +482,26 @@ const churnProbabilityValue = document.querySelector('.text-center .text-7xl');
 const churnProbabilityBar = document.querySelector('.h-full.bg-gradient-to-r');
 const riskLevelBadge = document.querySelector('.flex.items-center.gap-2.px-3.py-1.rounded-full');
 
-// Update display values (終極真實數據版)
+// Update display values
 function updateDisplay() {
     const lastVisitDays = parseInt(lastVisitSlider.value);
     const appUsage = document.querySelector('input[name="app_usage"]:checked').value;
     const couponRedeemed = couponToggle.checked;
     
-    // 1. 判斷群體 (Cluster 0, 1, 2)
+    // 1. 判斷群體 (群體0, 群體1, 群體2)
     let segment;
-    // 假設拉桿拉到極端值 (大於80天)，模擬找出那個唯一的 Outlier (Cluster 2)
-    if (lastVisitDays >= 80) {
+    
+    // 拉桿極端值 (大於 85 天) 對應那唯一的極端客 (群體 2)
+    if (lastVisitDays > 85) {
         segment = segments.C2; 
     } 
-    // 超過 30 天沒來，或者沒有用 APP，歸類為最大群、最高危的 Cluster 1 (173人)
+    // 天數長 或 無App 對應高流失率 (36.8%) 的群體 0
     else if (lastVisitDays > 30 || appUsage === 'none') {
-        segment = segments.C1; 
-    } 
-    // 近期有來且有裝 APP，歸類為最穩定的 Cluster 0 (114人)
-    else {
         segment = segments.C0; 
+    } 
+    // 表現較好 對應低流失率 (18.5%) 的群體 1
+    else {
+        segment = segments.C1; 
     }
     
     // 2. 更新左側群體顯示
@@ -506,26 +516,39 @@ function updateDisplay() {
     const riskDot = riskLevelBadge.querySelector('.size-2');
     let churnProbability;
 
-    if (lastVisitDays > 30) {
-        riskSpan.textContent = '⚠️ 高危險流失客';
+    if (segment.letter === '0') {
+        // 群體0：高危險
+        riskSpan.textContent = '⚠️ 高流失風險 (群體0)';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF3333]/20 text-[#FF3333] border border-[#FF3333]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(255,51,51,0.4)]';
         riskDot.className = 'size-2 bg-[#FF3333] rounded-full animate-pulse shadow-[0_0_8px_#FF3333]';
         
         churnProbabilityBar.className = 'h-full bg-gradient-to-r from-red-500 via-[#FF3333] to-red-700 rounded-full relative overflow-hidden shadow-[0_0_30px_rgba(255,51,51,0.9)]';
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-danger-intense';
         
-        churnProbability = 60 + ((lastVisitDays - 30) * 1.5);
-        churnProbability = Math.min(98, Math.round(churnProbability));
-    } else {
-        riskSpan.textContent = '✅ 活躍安全客';
+        // 依照 36.8% 的基準上下浮動
+        churnProbability = Math.round(36.8 + (lastVisitDays * 0.5)); 
+        churnProbability = Math.min(95, churnProbability);
+    } else if (segment.letter === '1') {
+        // 群體1：相對穩定
+        riskSpan.textContent = '✅ 穩定活躍客 (群體1)';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(142,255,51,0.3)]';
         riskDot.className = 'size-2 bg-[var(--accent-primary)] rounded-full animate-pulse shadow-[0_0_8px_var(--accent-primary)]';
         
         churnProbabilityBar.className = 'h-full bg-gradient-to-r from-green-500 via-[var(--accent-primary)] to-green-600 rounded-full relative overflow-hidden shadow-[0_0_30px_rgba(142,255,51,0.6)]';
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-electric-green';
         
-        churnProbability = lastVisitDays * 1.2;
-        churnProbability = Math.min(36, Math.round(churnProbability));
+        // 依照 18.5% 的基準上下浮動
+        churnProbability = Math.round(18.5 + (lastVisitDays * 0.2)); 
+        churnProbability = Math.min(30, churnProbability);
+    } else {
+        // 群體2：異常
+        riskSpan.textContent = '🔍 異常極端客 (群體2)';
+        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-gray-500/20 text-gray-300 border border-gray-500/30 uppercase tracking-wide font-bold shadow-none';
+        riskDot.className = 'size-2 bg-gray-400 rounded-full';
+        
+        churnProbabilityBar.className = 'h-full bg-gray-600 rounded-full relative overflow-hidden';
+        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-gray-300';
+        churnProbability = 0;
     }
     
     churnProbabilityValue.innerHTML = `${churnProbability}<span class="text-3xl text-[var(--text-secondary)] font-light text-shadow-none">%</span>`;
@@ -547,38 +570,35 @@ function updateDisplay() {
 
         if (h5s.length >= 3 && ps.length >= 3) {
             
-            // 框框 1：依據 0, 1, 2 群給予不同策略
+            // 策略框 1
             if (segment.letter === '0') {
-                h5s[0].innerHTML = 'VIP 專屬升級' + greenCheck;
-                ps[0].textContent = '對 114 位主力客推廣 VIP 儲值卡與專屬升級活動。';
+                h5s[0].innerHTML = '群體 0 專屬挽回' + redCheck;
+                ps[0].textContent = '針對 114 位高風險客群發送高折扣優惠，及時止損。';
             } else if (segment.letter === '1') {
-                h5s[0].innerHTML = '高折扣優惠券' + (churnProbability > 80 ? redCheck : greenCheck);
-                ps[0].textContent = '針對 173 位高危險客發送限時、高折扣促銷喚醒消費。';
-            } else if (segment.letter === '2') {
-                h5s[0].innerHTML = '人工特別處理' + redCheck;
-                ps[0].textContent = '此為極端值 (1人)，需交由客服一對一聯繫或檢查數據。';
+                h5s[0].innerHTML = '群體 1 專屬維護' + greenCheck;
+                ps[0].textContent = '針對 173 位主力客群推廣 VIP 會員制度。';
+            } else {
+                h5s[0].innerHTML = '資料複查' + redCheck;
+                ps[0].textContent = '不發送自動化行銷，需人工確認此筆數據真實性。';
             }
 
-            // 框框 2：口味樣品 (只給 Cluster 0)
-            h5s[1].innerHTML = '口味樣品' + (segment.letter === '0' ? greenCheck : '');
-            ps[1].innerHTML = segment.letter === '0' ? '<span class="text-[var(--accent-primary)] font-bold">✅ 專屬福利：提供免費飲料</span>' : '免費品嚐季節限定烏龍茶。';
+            // 策略框 2
+            h5s[1].innerHTML = '優惠券與福利' + (segment.letter === '1' ? greenCheck : '');
+            ps[1].innerHTML = segment.letter === '1' ? '<span class="text-[var(--accent-primary)] font-bold">✅ 優先發送專屬樣品</span>' : '僅發送常規促銷資訊。';
 
-            // 框框 3：SMS 提醒 (危險預警)
-            h5s[2].innerHTML = 'SMS 提醒' + (lastVisitDays >= 40 ? redCheck : '');
-            ps[2].textContent = '個人化「我們想念您」簡訊附帶專屬回歸連結。';
+            // 策略框 3
+            h5s[2].innerHTML = '預警通知' + (segment.letter === '0' ? redCheck : '');
+            ps[2].textContent = segment.letter === '0' ? '立即觸發「我們想念您」簡訊。' : '系統暫不觸發流失警報。';
         }
     }
 }
 
-// Add event listeners for real-time updates
 lastVisitSlider.addEventListener('input', updateDisplay);
 appUsageRadios.forEach(radio => radio.addEventListener('change', updateDisplay));
 couponToggle.addEventListener('change', updateDisplay);
 
-// Initialize on page load
 document.addEventListener('DOMContentLoaded', updateDisplay);
 
-// Add visual feedback for real-time updates
 let updateCount = 0;
 const liveIndicator = document.createElement('div');
 liveIndicator.className = 'fixed bottom-4 right-4 bg-[var(--accent-primary)] text-black text-xs font-bold px-3 py-1 rounded-full opacity-0 transition-opacity duration-300 z-50';

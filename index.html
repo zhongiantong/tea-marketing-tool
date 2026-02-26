@@ -452,36 +452,35 @@ const segments = {
         title: '群體 0（傳統型顧客）', 
         subtitle: '人數：114 人 | 流失率：36.8%',
         description: '這群人完全不用 APP，無法接收推播，但每月來 8 次左右，貢獻度不低。',
-        strategy: '推薦策略：推出實體集點卡',
-        // 對應：折扣(優先優惠券)、產品(口味樣品)、渠道(SMS提醒)
+        strategy: '推薦策略：傳統客群專屬維護計畫',
         boxes: [
-            { h: '優先優惠券 (折扣)' + tickRed, p: '建議內容：[針對不用APP的傳統型顧客推出實體集點卡，讓他們也能累積點數換領優先優惠券。]' },
-            { h: '口味樣品 (產品)' + tickRed, p: '數據依據：群體0流失率37%偏高。他們每月來8次，建議提供季節口味樣品試飲，增加留店誘因。' },
-            { h: 'SMS 提醒 (渠道)' + tickRed, p: '預期效果：針對無APP客群，透過SMS提醒配合實體集點卡收集消費資料，預期能降低流失率。' }
+            { h: '優先優惠券 (折扣)' + tickRed, p: '推出實體集點卡，讓傳統顧客也能累積點數換領優先優惠券。' },
+            { h: '口味樣品 (產品)' + tickRed, p: '由於流失率高達 37%，建議提供季節限定試飲，增加到店誘因。' },
+            { h: 'SMS 提醒 (渠道)' + tickRed, p: '針對無 APP 客群，個人化 SMS 是唯一觸達手段，提醒積點即將到期。' }
         ]
     },
     C1: {
         letter: '1', 
         title: '群體 1（預測流失轉化）', 
         subtitle: '人數：173 人 | 流失率：18.5%',
-        description: '這是最核心的主力，需針對預測模型中顯示的關鍵特徵進行主動挽回。',
-        strategy: '推薦策略：主動發送折扣券',
+        description: '這是最核心的主力，需針對預測模型中顯示的關鍵特徵（到訪天數）進行主動挽回。',
+        strategy: '推薦策略：高危流失客緊急挽回計畫',
         boxes: [
-            { h: '優先優惠券 (折扣)' + tickGreen, p: '建議內容：[針對預測會流失但還沒流失的顧客，透過 App 主動發送優先折扣券。]' },
-            { h: '口味樣品 (產品)' + tickGreen, p: '數據依據：days_since_last_visit權重最高(0.27)。混淆矩陣漏掉9個真流失客，需靠新產品樣品配合券拉回。' },
-            { h: 'SMS 提醒 (渠道)' + tickGreen, p: '預期效果：如果執行，預期能降低誤判為活躍的那9個流失客的實際流失率。' }
+            { h: '優先優惠券 (折扣)' + tickGreen, p: '發送限時、高折扣的促銷優惠券，挽回模型預測中漏掉的 9 個真流失客。' },
+            { h: '口味樣品 (產品)' + tickGreen, p: '配合到訪天數權重 (0.27) 分析，在流失臨界點前提供樣品兌換券。' },
+            { h: 'SMS 提醒 (渠道)' + tickGreen, p: '對於已安裝 App 但久未使用的用戶，輔以 SMS 確保挽回訊息 100% 觸達。' }
         ]
     },
     C2: {
         letter: '2', 
         title: '群體 2（年齡精準行銷）', 
         subtitle: '人數：1 人 | 流失率：0.0%',
-        description: '根據模型特徵，年齡是預測流失的第二重要因素。',
-        strategy: '推薦策略：專屬年齡優惠服務',
+        description: '極度穩定客群。Age 是第二重要特徵 (0.15)，代表年齡對預測很有幫助。',
+        strategy: '推薦策略：主力客群尊榮升級計畫',
         boxes: [
-            { h: '優先優惠券 (折扣)' + tickCyan, p: '建議內容：[針對不同年齡的顧客設計專屬優先優惠券，因為他們比想像中更不容易流失。]' },
-            { h: '口味樣品 (產品)' + tickCyan, p: '數據依據：Age權重0.15。針對不同年齡層偏好提供口味樣品，能更精準抓住客群需求。' },
-            { h: 'SMS 提醒 (渠道)' + tickCyan, p: '預期效果：用對方法（個人化SMS）就能讓不同年齡層更忠誠，維持極低流失率。' }
+            { h: '優先優惠券 (折扣)' + tickCyan, p: '推廣 VIP 儲值卡與年齡專屬升級活動（如學生週/長輩日），加深黏著度。' },
+            { h: '口味樣品 (產品)' + tickCyan, p: '提供 VIP 專屬福利：優先免費品嚐季節限定新產品（如高端烏龍茶）。' },
+            { h: 'SMS 提醒 (渠道)' + tickCyan, p: '發送尊榮感十足的個人化節慶祝福或 VIP 活動邀請連結。' }
         ]
     }
 };
@@ -502,7 +501,7 @@ function updateDisplay() {
     const appUsage = document.querySelector('input[name="app_usage"]:checked').value;
     
     let segment;
-    // 判定邏輯：
+    // 保持你正確的群體判定邏輯
     if (lastVisitDays === 0) {
         segment = segments.C2; 
     } else if (lastVisitDays <= 30 && appUsage !== 'none') {
@@ -517,10 +516,11 @@ function updateDisplay() {
     if(segmentDescription) segmentDescription.textContent = segment.description;
     if(strategyDescription) strategyDescription.textContent = segment.strategy;
     
+    // 更新風險標籤與進度條
     const riskSpan = riskLevelBadge.querySelector('span:last-child');
     if (segment.letter === '2') {
         riskSpan.textContent = '極度穩定 (0.0%)';
-        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-bold shadow-[0_0_15px_rgba(6,182,212,0.4)]';
+        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-bold';
         churnProbabilityBar.className = 'h-full bg-cyan-500 rounded-full';
         churnProbabilityBar.style.width = '2%';
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter text-cyan-300';
@@ -534,14 +534,14 @@ function updateDisplay() {
         churnProbabilityValue.innerHTML = `18.5<span class="text-3xl font-light">%</span>`;
     } else {
         riskSpan.textContent = '高流失警報 (36.8%)';
-        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF3333]/20 text-[#FF3333] border border-[#FF3333]/30 font-bold shadow-[0_0_15px_rgba(255,51,51,0.4)]';
+        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF3333]/20 text-[#FF3333] border border-[#FF3333]/30 font-bold';
         churnProbabilityBar.className = 'h-full bg-[#FF3333] rounded-full';
         churnProbabilityBar.style.width = '36.8%';
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter text-[#FF3333]';
         churnProbabilityValue.innerHTML = `36.8<span class="text-3xl font-light">%</span>`;
     }
 
-    // 更新下方三格策略內容 (已鎖定折扣、產品、渠道分類)
+    // 更新下方三格：折扣、產品、渠道 (採用舊版策略動作)
     const strategyGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3');
     if (strategyGrid) {
         const h5s = strategyGrid.querySelectorAll('h5');

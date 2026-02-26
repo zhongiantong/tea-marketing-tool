@@ -560,8 +560,6 @@ function updateDisplay() {
                 } 
                 else if (index === 1) { // 口味樣品
                     if (segment.letter === '2') currentTick = tickCyan;
-                    else if (segment.letter === '1') currentTick = tickGreen;
-                    else if (lastVisitDays > 7) currentTick = tickRed;
                 } 
                 else if (index === 2) { // SMS 提醒
                     if (lastVisitDays > 30 || segment.letter === '0') currentTick = tickRed;

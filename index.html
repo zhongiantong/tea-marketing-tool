@@ -441,31 +441,31 @@
 </div>
 </main>
 <script>
-// 完全根據 Colab 真實流失率數據：
-// 群體0: 114人, 流失率 36.8% (高危險)
-// 群體1: 173人, 流失率 18.5% (較穩定)
-// 群體2: 1人, 流失率 0.0% (極端值)
+// 100% 根據你的真實數據：
+// 群體 0: 114人, 流失 42人, 比例 36.8%
+// 群體 1: 173人, 流失 32人, 比例 18.5%
+// 群體 2: 1人, 流失 0人, 比例 0.0%
 const segments = {
     C0: {
         letter: '0', 
-        title: '群體 0（高流失風險）', 
-        subtitle: '人數：114 人 | 流失率：36.8%',
-        description: '此群體流失比例達 36.8%，屬於高風險客群，需要立即的挽回措施以避免顧客流失。',
-        strategy: '推薦策略：發送喚醒簡訊與高折扣優惠券'
+        title: '群體 0', 
+        subtitle: '總人數：114 人 | 流失人數：42 人',
+        description: '此群體流失比例為 36.8%，屬於流失風險較高的客群，需要重點關注。',
+        strategy: '建議策略：針對高流失風險制定挽回計畫'
     },
     C1: {
         letter: '1', 
-        title: '群體 1（穩定主力客）', 
-        subtitle: '人數：173 人 | 流失率：18.5%',
-        description: '佔比最大的顧客群，流失率較低（18.5%），屬於相對活躍的主力，應著重於提升客單價與忠誠度。',
-        strategy: '推薦策略：常規促銷與 VIP 專屬福利'
+        title: '群體 1', 
+        subtitle: '總人數：173 人 | 流失人數：32 人',
+        description: '此群體流失比例為 18.5%，流失情況相對穩定，為佔比最大的主要客群。',
+        strategy: '建議策略：常規行銷與顧客關係維護'
     },
     C2: {
         letter: '2', 
-        title: '群體 2（極端異常客）', 
-        subtitle: '人數：1 人 | 流失率：0.0%',
-        description: '僅有 1 筆資料，流失率 0%，為極端異常值 (Outlier)，可能是輸入錯誤或超級 VVIP。',
-        strategy: '推薦策略：不進行自動化行銷，交由人工獨立檢視'
+        title: '群體 2', 
+        subtitle: '總人數：1 人 | 流失人數：0 人',
+        description: '流失比例為 0.0%，僅有 1 筆數據，屬於極端異常值 (Outlier)。',
+        strategy: '建議策略：獨立排除，以人工方式檢視數據'
     }
 };
 
@@ -485,81 +485,70 @@ const riskLevelBadge = document.querySelector('.flex.items-center.gap-2.px-3.py-
 // Update display values
 function updateDisplay() {
     const lastVisitDays = parseInt(lastVisitSlider.value);
-    const appUsage = document.querySelector('input[name="app_usage"]:checked').value;
-    const couponRedeemed = couponToggle.checked;
     
-    // 1. 判斷群體 (群體0, 群體1, 群體2)
+    // 1. 判斷群體 (以天數簡單區分展示效果)
     let segment;
-    
-    // 拉桿極端值 (大於 85 天) 對應那唯一的極端客 (群體 2)
-    if (lastVisitDays > 85) {
-        segment = segments.C2; 
-    } 
-    // 天數長 或 無App 對應高流失率 (36.8%) 的群體 0
-    else if (lastVisitDays > 30 || appUsage === 'none') {
-        segment = segments.C0; 
-    } 
-    // 表現較好 對應低流失率 (18.5%) 的群體 1
-    else {
-        segment = segments.C1; 
+    if (lastVisitDays >= 85) {
+        segment = segments.C2; // 拉到極端值顯示群體2
+    } else if (lastVisitDays > 30) {
+        segment = segments.C0; // 超過30天顯示高風險的群體0
+    } else {
+        segment = segments.C1; // 近期有來顯示穩定的群體1
     }
     
-    // 2. 更新左側群體顯示
+    // 2. 更新左側群體文字
     if(segmentLetter) segmentLetter.textContent = segment.letter;
     if(segmentTitle) segmentTitle.textContent = segment.title;
     if(segmentSubtitle) segmentSubtitle.textContent = segment.subtitle;
     if(segmentDescription) segmentDescription.textContent = segment.description;
     if(strategyDescription) strategyDescription.textContent = segment.strategy;
     
-    // 3. 計算流失率與風險狀態
+    // 3. 更新儀表板流失率與顏色 (直接寫死真實數據，不再浮動！)
     const riskSpan = riskLevelBadge.querySelector('span:last-child');
     const riskDot = riskLevelBadge.querySelector('.size-2');
     let churnProbability;
 
     if (segment.letter === '0') {
-        // 群體0：高危險
-        riskSpan.textContent = '⚠️ 高流失風險 (群體0)';
+        riskSpan.textContent = '⚠️ 高流失風險';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF3333]/20 text-[#FF3333] border border-[#FF3333]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(255,51,51,0.4)]';
         riskDot.className = 'size-2 bg-[#FF3333] rounded-full animate-pulse shadow-[0_0_8px_#FF3333]';
         
         churnProbabilityBar.className = 'h-full bg-gradient-to-r from-red-500 via-[#FF3333] to-red-700 rounded-full relative overflow-hidden shadow-[0_0_30px_rgba(255,51,51,0.9)]';
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-danger-intense';
         
-        // 依照 36.8% 的基準上下浮動
-        churnProbability = Math.round(36.8 + (lastVisitDays * 0.5)); 
-        churnProbability = Math.min(95, churnProbability);
-    } else if (segment.letter === '1') {
-        // 群體1：相對穩定
-        riskSpan.textContent = '✅ 穩定活躍客 (群體1)';
+        churnProbability = 36.8; // 絕對精準對應 PDF
+    } 
+    else if (segment.letter === '1') {
+        riskSpan.textContent = '✅ 穩定客群';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(142,255,51,0.3)]';
         riskDot.className = 'size-2 bg-[var(--accent-primary)] rounded-full animate-pulse shadow-[0_0_8px_var(--accent-primary)]';
         
         churnProbabilityBar.className = 'h-full bg-gradient-to-r from-green-500 via-[var(--accent-primary)] to-green-600 rounded-full relative overflow-hidden shadow-[0_0_30px_rgba(142,255,51,0.6)]';
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-electric-green';
         
-        // 依照 18.5% 的基準上下浮動
-        churnProbability = Math.round(18.5 + (lastVisitDays * 0.2)); 
-        churnProbability = Math.min(30, churnProbability);
-    } else {
-        // 群體2：異常
-        riskSpan.textContent = '🔍 異常極端客 (群體2)';
+        churnProbability = 18.5; // 絕對精準對應 PDF
+    } 
+    else {
+        riskSpan.textContent = '🔍 異常數據';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-gray-500/20 text-gray-300 border border-gray-500/30 uppercase tracking-wide font-bold shadow-none';
         riskDot.className = 'size-2 bg-gray-400 rounded-full';
         
         churnProbabilityBar.className = 'h-full bg-gray-600 rounded-full relative overflow-hidden';
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-gray-300';
-        churnProbability = 0;
+        
+        churnProbability = 0.0; // 絕對精準對應 PDF
     }
     
+    // 顯示小數點數字
     churnProbabilityValue.innerHTML = `${churnProbability}<span class="text-3xl text-[var(--text-secondary)] font-light text-shadow-none">%</span>`;
-    churnProbabilityBar.style.width = `${churnProbability}%`;
+    churnProbabilityBar.style.width = `${Math.round(churnProbability)}%`;
     
     const lastVisitDisplay = document.querySelector('.font-mono.text-xl');
     if (lastVisitDisplay) {
         lastVisitDisplay.textContent = `${lastVisitDays}d`;
     }
 
-    // 4. 更新三個推薦策略框框
+    // 4. 更新下方三個推薦策略框框
     const strategyGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3');
     if (strategyGrid) {
         const h5s = strategyGrid.querySelectorAll('h5');
@@ -570,25 +559,22 @@ function updateDisplay() {
 
         if (h5s.length >= 3 && ps.length >= 3) {
             
-            // 策略框 1
             if (segment.letter === '0') {
-                h5s[0].innerHTML = '群體 0 專屬挽回' + redCheck;
-                ps[0].textContent = '針對 114 位高風險客群發送高折扣優惠，及時止損。';
+                h5s[0].innerHTML = '挽回計畫' + redCheck;
+                ps[0].textContent = '針對 群體 0 (114人) 發送高折扣優惠，降低 36.8% 的流失風險。';
             } else if (segment.letter === '1') {
-                h5s[0].innerHTML = '群體 1 專屬維護' + greenCheck;
-                ps[0].textContent = '針對 173 位主力客群推廣 VIP 會員制度。';
+                h5s[0].innerHTML = '常規維護' + greenCheck;
+                ps[0].textContent = '針對 群體 1 (173人) 進行常規行銷，維持 18.5% 的穩定表現。';
             } else {
                 h5s[0].innerHTML = '資料複查' + redCheck;
-                ps[0].textContent = '不發送自動化行銷，需人工確認此筆數據真實性。';
+                ps[0].textContent = '群體 2 (1人) 為極端值，建議交由人工獨立評估，不自動發送。';
             }
 
-            // 策略框 2
-            h5s[1].innerHTML = '優惠券與福利' + (segment.letter === '1' ? greenCheck : '');
-            ps[1].innerHTML = segment.letter === '1' ? '<span class="text-[var(--accent-primary)] font-bold">✅ 優先發送專屬樣品</span>' : '僅發送常規促銷資訊。';
+            h5s[1].innerHTML = '優惠券派發' + (segment.letter === '1' ? greenCheck : '');
+            ps[1].innerHTML = segment.letter === '1' ? '<span class="text-[var(--accent-primary)] font-bold">✅ 符合派發條件</span>' : '僅發送基礎促銷。';
 
-            // 策略框 3
-            h5s[2].innerHTML = '預警通知' + (segment.letter === '0' ? redCheck : '');
-            ps[2].textContent = segment.letter === '0' ? '立即觸發「我們想念您」簡訊。' : '系統暫不觸發流失警報。';
+            h5s[2].innerHTML = '流失預警' + (segment.letter === '0' ? redCheck : '');
+            ps[2].textContent = segment.letter === '0' ? '觸發流失警報，立刻發送關懷簡訊。' : '系統暫不觸發流失警報。';
         }
     }
 }
@@ -598,24 +584,5 @@ appUsageRadios.forEach(radio => radio.addEventListener('change', updateDisplay))
 couponToggle.addEventListener('change', updateDisplay);
 
 document.addEventListener('DOMContentLoaded', updateDisplay);
-
-let updateCount = 0;
-const liveIndicator = document.createElement('div');
-liveIndicator.className = 'fixed bottom-4 right-4 bg-[var(--accent-primary)] text-black text-xs font-bold px-3 py-1 rounded-full opacity-0 transition-opacity duration-300 z-50';
-liveIndicator.textContent = '更新中...';
-document.body.appendChild(liveIndicator);
-
-function showUpdateIndicator() {
-    updateCount++;
-    liveIndicator.style.opacity = '1';
-    liveIndicator.textContent = `即時更新 #${updateCount}`;
-    setTimeout(() => {
-        liveIndicator.style.opacity = '0';
-    }, 1000);
-}
-
-lastVisitSlider.addEventListener('input', showUpdateIndicator);
-appUsageRadios.forEach(radio => radio.addEventListener('change', showUpdateIndicator));
-couponToggle.addEventListener('change', showUpdateIndicator);
 </script>
 </body></html>

@@ -442,27 +442,48 @@
 </main>
 <script>
 // 100% 根據你的 Colab 真實數據與業務邏輯
+// 定義彩色剔號 Icon
+const tickRed = '<span class="material-symbols-outlined thick text-[20px] text-[#FF4D4D] ml-2" style="vertical-align: middle;">check_circle</span>';
+const tickGreen = '<span class="material-symbols-outlined thick text-[20px] text-[var(--accent-primary)] ml-2" style="vertical-align: middle;">check_circle</span>';
+const tickCyan = '<span class="material-symbols-outlined thick text-[20px] text-cyan-400 ml-2" style="vertical-align: middle;">stars</span>';
+
 const segments = {
     C2: {
         letter: '2', 
         title: '群體 2（超級忠誠客）', 
         subtitle: '人數：1 人 | 流失率：0.0%',
         description: '這位顧客是「神級熟客」，一個月到訪 30 天，最後到訪為 0 天。流失風險極低。',
-        strategy: '推薦策略：店長親自打招呼，維持極高忠誠度'
+        strategy: '推薦策略：店長親自打招呼，維持極高忠誠度',
+        // 策略盒內容
+        boxes: [
+            { h: 'VIP 特規待遇' + tickCyan, p: '建議由店長提供專屬隱藏福利，如「專屬留座」或店長親自接待。' },
+            { h: '頂級福利派發' + tickCyan, p: '不需一般優惠券，應贈送高單價新品試吃或 VIP 私人活動邀請。' },
+            { h: '狀態：絕對忠誠' + tickCyan, p: '目前狀態極佳，系統已自動將其標記，避免一般營銷活動騷擾。' }
+        ]
     },
     C1: {
         letter: '1', 
         title: '群體 1（穩定主力客）', 
         subtitle: '人數：173 人 | 流失率：18.5%',
         description: '這是你最核心的 173 位客群，流失率僅 18.5%，表現穩定。',
-        strategy: '推薦策略：定期發送會員優惠，保持互動'
+        strategy: '推薦策略：定期發送會員優惠，保持互動',
+        boxes: [
+            { h: '穩定維護方案' + tickGreen, p: '針對這 173 位主力客群，重點推廣季度點數加倍或回購優惠活動。' },
+            { h: '常規福利派發' + tickGreen, p: '定期發送 85 折「回購優惠券」以維持顧客穩定的消費習慣。' },
+            { h: '狀態：安全觀察' + tickGreen, p: '屬於安全範圍，若超過 20 天未到訪則由系統觸發輕度提醒。' }
+        ]
     },
     C0: {
         letter: '0', 
         title: '群體 0（高流失風險）', 
         subtitle: '人數：114 人 | 流失率：36.8%',
         description: '這 114 位顧客已經較長時間未到訪，流失比例達 36.8%，需要重點關注。',
-        strategy: '推薦策略：發送強力挽回折扣券 (Churn Prevention)'
+        strategy: '推薦策略：發送強力挽回折扣券 (Churn Prevention)',
+        boxes: [
+            { h: '緊急挽回計畫' + tickRed, p: '對這 114 位高風險客群發送限時 48 小時有效的「5 折強效折扣券」。' },
+            { h: '重磅福利派發' + tickRed, p: '推送「我們想念您」簡訊，附帶專屬免運代碼或免費贈品領取券。' },
+            { h: '狀態：紅色預警' + tickRed, p: '流失警報已觸發！系統需每日追蹤其反應，若一週無回饋則視為流失。' }
+        ]
     }
 };
 
@@ -484,60 +505,66 @@ function updateDisplay() {
     
     let segment;
     
-    // 邏輯判定：
+    // 邏輯判定保持不變：
     if (lastVisitDays === 0) {
-        // 最後到訪 0 天 -> 群體 2 (那 1 位神級熟客)
         segment = segments.C2; 
     } else if (lastVisitDays <= 30 && appUsage !== 'none') {
-        // 30天內有來且有App -> 群體 1 (18.5%)
         segment = segments.C1; 
     } else {
-        // 超過 30 天或沒用 App -> 群體 0 (36.8%)
         segment = segments.C0; 
     }
     
-    // 更新 UI 文字
+    // 1. 更新基本文字
     if(segmentLetter) segmentLetter.textContent = segment.letter;
     if(segmentTitle) segmentTitle.textContent = segment.title;
     if(segmentSubtitle) segmentSubtitle.textContent = segment.subtitle;
     if(segmentDescription) segmentDescription.textContent = segment.description;
     if(strategyDescription) strategyDescription.textContent = segment.strategy;
     
+    // 2. 更新中央流失率數字與進度條
     const riskSpan = riskLevelBadge.querySelector('span:last-child');
     const riskDot = riskLevelBadge.querySelector('.size-2');
 
     if (segment.letter === '2') {
-        // 群體 2 顯示 (0%)
         riskSpan.textContent = '極度穩定 (0.0%)';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-bold shadow-[0_0_15px_rgba(6,182,212,0.4)]';
         riskDot.className = 'size-2 bg-cyan-400 rounded-full animate-ping';
-        
         churnProbabilityBar.className = 'h-full bg-cyan-500 rounded-full';
-        churnProbabilityBar.style.width = '2%'; // 象徵性顯示一點
+        churnProbabilityBar.style.width = '2%';
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter text-cyan-300';
         churnProbabilityValue.innerHTML = `0<span class="text-3xl font-light">%</span>`;
 
     } else if (segment.letter === '1') {
-        // 群體 1 顯示 (18.5%)
         riskSpan.textContent = '表現穩定 (18.5%)';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 font-bold';
         riskDot.className = 'size-2 bg-[var(--accent-primary)] rounded-full';
-        
         churnProbabilityBar.className = 'h-full bg-[var(--accent-primary)] rounded-full';
         churnProbabilityBar.style.width = '18.5%';
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter text-[var(--accent-primary)]';
         churnProbabilityValue.innerHTML = `18.5<span class="text-3xl font-light">%</span>`;
 
     } else {
-        // 群體 0 顯示 (36.8%)
         riskSpan.textContent = '高流失警報 (36.8%)';
         riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF3333]/20 text-[#FF3333] border border-[#FF3333]/30 font-bold shadow-[0_0_15px_rgba(255,51,51,0.4)]';
         riskDot.className = 'size-2 bg-[#FF3333] rounded-full animate-pulse';
-        
         churnProbabilityBar.className = 'h-full bg-[#FF3333] rounded-full';
         churnProbabilityBar.style.width = '36.8%';
         churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter text-[#FF3333]';
         churnProbabilityValue.innerHTML = `36.8<span class="text-3xl font-light">%</span>`;
+    }
+
+    // 3. 【新增：更新下方三格推薦策略與 Tick】
+    const strategyGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3');
+    if (strategyGrid) {
+        const h5s = strategyGrid.querySelectorAll('h5');
+        const ps = strategyGrid.querySelectorAll('p');
+        
+        if (h5s.length >= 3 && ps.length >= 3) {
+            segment.boxes.forEach((box, index) => {
+                h5s[index].innerHTML = box.h;
+                ps[index].textContent = box.p;
+            });
+        }
     }
     
     const lastVisitDisplay = document.querySelector('.font-mono.text-xl');

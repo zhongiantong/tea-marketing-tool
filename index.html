@@ -441,35 +441,31 @@
 </div>
 </main>
 <script>
-// 100% 根據你的真實數據：
-// 群體 0: 114人, 流失 42人, 比例 36.8%
-// 群體 1: 173人, 流失 32人, 比例 18.5%
-// 群體 2: 1人, 流失 0人, 比例 0.0%
+// 100% 根據你的 Colab 真實數據與業務邏輯
 const segments = {
-    C0: {
-        letter: '0', 
-        title: '群體 0', 
-        subtitle: '總人數：114 人 | 流失人數：42 人',
-        description: '此群體流失比例為 36.8%，屬於流失風險較高的客群，需要重點關注。',
-        strategy: '建議策略：針對高流失風險制定挽回計畫'
+    C2: {
+        letter: '2', 
+        title: '群體 2（超級忠誠客）', 
+        subtitle: '人數：1 人 | 流失率：0.0%',
+        description: '這位顧客是「神級熟客」，一個月到訪 30 天，最後到訪為 0 天。流失風險極低。',
+        strategy: '推薦策略：店長親自打招呼，維持極高忠誠度'
     },
     C1: {
         letter: '1', 
-        title: '群體 1', 
-        subtitle: '總人數：173 人 | 流失人數：32 人',
-        description: '此群體流失比例為 18.5%，流失情況相對穩定，為佔比最大的主要客群。',
-        strategy: '建議策略：常規行銷與顧客關係維護'
+        title: '群體 1（穩定主力客）', 
+        subtitle: '人數：173 人 | 流失率：18.5%',
+        description: '這是你最核心的 173 位客群，流失率僅 18.5%，表現穩定。',
+        strategy: '推薦策略：定期發送會員優惠，保持互動'
     },
-    C2: {
-        letter: '2', 
-        title: '群體 2', 
-        subtitle: '總人數：1 人 | 流失人數：0 人',
-        description: '流失比例為 0.0%，僅有 1 筆數據，屬於極端異常值 (Outlier)。',
-        strategy: '建議策略：獨立排除，以人工方式檢視數據'
+    C0: {
+        letter: '0', 
+        title: '群體 0（高流失風險）', 
+        subtitle: '人數：114 人 | 流失率：36.8%',
+        description: '這 114 位顧客已經較長時間未到訪，流失比例達 36.8%，需要重點關注。',
+        strategy: '推薦策略：發送強力挽回折扣券 (Churn Prevention)'
     }
 };
 
-// DOM elements
 const lastVisitSlider = document.querySelector('input[type="range"]');
 const appUsageRadios = document.querySelectorAll('input[name="app_usage"]');
 const couponToggle = document.querySelector('input[type="checkbox"]');
@@ -482,107 +478,75 @@ const churnProbabilityValue = document.querySelector('.text-center .text-7xl');
 const churnProbabilityBar = document.querySelector('.h-full.bg-gradient-to-r');
 const riskLevelBadge = document.querySelector('.flex.items-center.gap-2.px-3.py-1.rounded-full');
 
-// Update display values
 function updateDisplay() {
     const lastVisitDays = parseInt(lastVisitSlider.value);
+    const appUsage = document.querySelector('input[name="app_usage"]:checked').value;
     
-    // 1. 判斷群體 (以天數簡單區分展示效果)
     let segment;
-    if (lastVisitDays >= 85) {
-        segment = segments.C2; // 拉到極端值顯示群體2
-    } else if (lastVisitDays > 30) {
-        segment = segments.C0; // 超過30天顯示高風險的群體0
+    
+    // 邏輯判定：
+    if (lastVisitDays === 0) {
+        // 最後到訪 0 天 -> 群體 2 (那 1 位神級熟客)
+        segment = segments.C2; 
+    } else if (lastVisitDays <= 30 && appUsage !== 'none') {
+        // 30天內有來且有App -> 群體 1 (18.5%)
+        segment = segments.C1; 
     } else {
-        segment = segments.C1; // 近期有來顯示穩定的群體1
+        // 超過 30 天或沒用 App -> 群體 0 (36.8%)
+        segment = segments.C0; 
     }
     
-    // 2. 更新左側群體文字
+    // 更新 UI 文字
     if(segmentLetter) segmentLetter.textContent = segment.letter;
     if(segmentTitle) segmentTitle.textContent = segment.title;
     if(segmentSubtitle) segmentSubtitle.textContent = segment.subtitle;
     if(segmentDescription) segmentDescription.textContent = segment.description;
     if(strategyDescription) strategyDescription.textContent = segment.strategy;
     
-    // 3. 更新儀表板流失率與顏色 (直接寫死真實數據，不再浮動！)
     const riskSpan = riskLevelBadge.querySelector('span:last-child');
     const riskDot = riskLevelBadge.querySelector('.size-2');
-    let churnProbability;
 
-    if (segment.letter === '0') {
-        riskSpan.textContent = '⚠️ 高流失風險';
-        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF3333]/20 text-[#FF3333] border border-[#FF3333]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(255,51,51,0.4)]';
-        riskDot.className = 'size-2 bg-[#FF3333] rounded-full animate-pulse shadow-[0_0_8px_#FF3333]';
+    if (segment.letter === '2') {
+        // 群體 2 顯示 (0%)
+        riskSpan.textContent = '極度穩定 (0.0%)';
+        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-bold shadow-[0_0_15px_rgba(6,182,212,0.4)]';
+        riskDot.className = 'size-2 bg-cyan-400 rounded-full animate-ping';
         
-        churnProbabilityBar.className = 'h-full bg-gradient-to-r from-red-500 via-[#FF3333] to-red-700 rounded-full relative overflow-hidden shadow-[0_0_30px_rgba(255,51,51,0.9)]';
-        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-danger-intense';
+        churnProbabilityBar.className = 'h-full bg-cyan-500 rounded-full';
+        churnProbabilityBar.style.width = '2%'; // 象徵性顯示一點
+        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter text-cyan-300';
+        churnProbabilityValue.innerHTML = `0<span class="text-3xl font-light">%</span>`;
+
+    } else if (segment.letter === '1') {
+        // 群體 1 顯示 (18.5%)
+        riskSpan.textContent = '表現穩定 (18.5%)';
+        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 font-bold';
+        riskDot.className = 'size-2 bg-[var(--accent-primary)] rounded-full';
         
-        churnProbability = 36.8; // 絕對精準對應 PDF
-    } 
-    else if (segment.letter === '1') {
-        riskSpan.textContent = '✅ 穩定客群';
-        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 uppercase tracking-wide font-bold shadow-[0_0_15px_rgba(142,255,51,0.3)]';
-        riskDot.className = 'size-2 bg-[var(--accent-primary)] rounded-full animate-pulse shadow-[0_0_8px_var(--accent-primary)]';
+        churnProbabilityBar.className = 'h-full bg-[var(--accent-primary)] rounded-full';
+        churnProbabilityBar.style.width = '18.5%';
+        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter text-[var(--accent-primary)]';
+        churnProbabilityValue.innerHTML = `18.5<span class="text-3xl font-light">%</span>`;
+
+    } else {
+        // 群體 0 顯示 (36.8%)
+        riskSpan.textContent = '高流失警報 (36.8%)';
+        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-[#FF3333]/20 text-[#FF3333] border border-[#FF3333]/30 font-bold shadow-[0_0_15px_rgba(255,51,51,0.4)]';
+        riskDot.className = 'size-2 bg-[#FF3333] rounded-full animate-pulse';
         
-        churnProbabilityBar.className = 'h-full bg-gradient-to-r from-green-500 via-[var(--accent-primary)] to-green-600 rounded-full relative overflow-hidden shadow-[0_0_30px_rgba(142,255,51,0.6)]';
-        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-glow-electric-green';
-        
-        churnProbability = 18.5; // 絕對精準對應 PDF
-    } 
-    else {
-        riskSpan.textContent = '🔍 異常數據';
-        riskLevelBadge.className = 'flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-gray-500/20 text-gray-300 border border-gray-500/30 uppercase tracking-wide font-bold shadow-none';
-        riskDot.className = 'size-2 bg-gray-400 rounded-full';
-        
-        churnProbabilityBar.className = 'h-full bg-gray-600 rounded-full relative overflow-hidden';
-        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter drop-shadow-lg text-gray-300';
-        
-        churnProbability = 0.0; // 絕對精準對應 PDF
+        churnProbabilityBar.className = 'h-full bg-[#FF3333] rounded-full';
+        churnProbabilityBar.style.width = '36.8%';
+        churnProbabilityValue.className = 'text-7xl font-bold tracking-tighter text-[#FF3333]';
+        churnProbabilityValue.innerHTML = `36.8<span class="text-3xl font-light">%</span>`;
     }
-    
-    // 顯示小數點數字
-    churnProbabilityValue.innerHTML = `${churnProbability}<span class="text-3xl text-[var(--text-secondary)] font-light text-shadow-none">%</span>`;
-    churnProbabilityBar.style.width = `${Math.round(churnProbability)}%`;
     
     const lastVisitDisplay = document.querySelector('.font-mono.text-xl');
-    if (lastVisitDisplay) {
-        lastVisitDisplay.textContent = `${lastVisitDays}d`;
-    }
-
-    // 4. 更新下方三個推薦策略框框
-    const strategyGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3');
-    if (strategyGrid) {
-        const h5s = strategyGrid.querySelectorAll('h5');
-        const ps = strategyGrid.querySelectorAll('p');
-        
-        const greenCheck = `<span class="material-symbols-outlined thick text-[20px] text-[var(--accent-primary)] shadow-[0_0_10px_var(--accent-primary)] rounded-full ml-2">check_circle</span>`;
-        const redCheck = `<span class="material-symbols-outlined thick text-[20px] text-[#FF4D4D] shadow-[0_0_10px_#FF4D4D] rounded-full ml-2">check_circle</span>`;
-
-        if (h5s.length >= 3 && ps.length >= 3) {
-            
-            if (segment.letter === '0') {
-                h5s[0].innerHTML = '挽回計畫' + redCheck;
-                ps[0].textContent = '針對 群體 0 (114人) 發送高折扣優惠，降低 36.8% 的流失風險。';
-            } else if (segment.letter === '1') {
-                h5s[0].innerHTML = '常規維護' + greenCheck;
-                ps[0].textContent = '針對 群體 1 (173人) 進行常規行銷，維持 18.5% 的穩定表現。';
-            } else {
-                h5s[0].innerHTML = '資料複查' + redCheck;
-                ps[0].textContent = '群體 2 (1人) 為極端值，建議交由人工獨立評估，不自動發送。';
-            }
-
-            h5s[1].innerHTML = '優惠券派發' + (segment.letter === '1' ? greenCheck : '');
-            ps[1].innerHTML = segment.letter === '1' ? '<span class="text-[var(--accent-primary)] font-bold">✅ 符合派發條件</span>' : '僅發送基礎促銷。';
-
-            h5s[2].innerHTML = '流失預警' + (segment.letter === '0' ? redCheck : '');
-            ps[2].textContent = segment.letter === '0' ? '觸發流失警報，立刻發送關懷簡訊。' : '系統暫不觸發流失警報。';
-        }
-    }
+    if (lastVisitDisplay) lastVisitDisplay.textContent = `${lastVisitDays}d`;
 }
 
 lastVisitSlider.addEventListener('input', updateDisplay);
 appUsageRadios.forEach(radio => radio.addEventListener('change', updateDisplay));
 couponToggle.addEventListener('change', updateDisplay);
-
 document.addEventListener('DOMContentLoaded', updateDisplay);
 </script>
 </body></html>

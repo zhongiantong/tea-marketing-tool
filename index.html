@@ -441,47 +441,44 @@
 </div>
 </main>
 <script>
-// 1. 定義顏色 Tick (單獨定義，唔再寫死喺標題入面)
+// 1. 定義顏色 Tick
 const tickRed = '<span class="material-symbols-outlined thick text-[20px] text-[#FF4D4D] ml-2" style="vertical-align: middle;">check_circle</span>';
 const tickGreen = '<span class="material-symbols-outlined thick text-[20px] text-[var(--accent-primary)] ml-2" style="vertical-align: middle;">check_circle</span>';
 const tickCyan = '<span class="material-symbols-outlined thick text-[20px] text-cyan-400 ml-2" style="vertical-align: middle;">stars</span>';
 
-// 2. 數據定義 (標題 h 已經清乾淨，唔帶 Tick)
+// 2. 數據定義 (標題 h 保持乾淨)
 const segments = {
     C0: {
-        letter: '0', 
-        title: '群體 0（傳統型顧客）', 
+        letter: '0', title: '群體 0（傳統型顧客）', 
         subtitle: '人數：114 人 | 流失率：36.8%',
         description: '這群人完全不用 APP，無法接收推播，但每月來 8 次左右，貢獻度不低。',
         strategy: '推薦策略：傳統客群專屬維護計畫',
         boxes: [
             { h: '優先優惠券 (折扣)', p: '推出實體集點卡，讓傳統顧客也能累積點數換領優先優惠券。' },
             { h: '口味樣品 (產品)', p: '由於流失率高達 37%，建議提供季節限定試飲，增加到店誘因。' },
-            { h: 'SMS 提醒 (渠道)', p: '針對無 APP 客群，個人化 SMS 是唯一觸達手段，提醒積點即將到期。' }
+            { h: 'SMS 提醒 (渠道)', p: '針對無 APP 客群，個人化 SMS 是唯一觸達手段。' }
         ]
     },
     C1: {
-        letter: '1', 
-        title: '群體 1（預測流失轉化）', 
+        letter: '1', title: '群體 1（預測流失轉化）', 
         subtitle: '人數：173 人 | 流失率：18.5%',
-        description: '這是最核心的主力，需針對預測模型中顯示的關鍵特徵（到訪天數）進行主動挽回。',
+        description: '核心主力，需針對預測模型中顯示的關鍵特徵進行主動挽回。',
         strategy: '推薦策略：高危流失客緊急挽回計畫',
         boxes: [
             { h: '優先優惠券 (折扣)', p: '發送限時、高折扣的促銷優惠券，挽回模型預測中漏掉的 9 個真流失客。' },
-            { h: '口味樣品 (產品)', p: '配合到訪天數權重 (0.27) 分析，在流失臨界點前提供樣品兌換券。' },
-            { h: 'SMS 提醒 (渠道)', p: '對於已安裝 App 但久未使用的用戶，輔以 SMS 確保挽回訊息 100% 觸達。' }
+            { h: '口味樣品 (產品)', p: '配合到訪天數權重 (0.27) 分析，在流失臨界點前提供樣品兌換。' },
+            { h: 'SMS 提醒 (渠道)', p: '對於已安裝 App 但久未使用的用戶，輔以 SMS 確保觸達。' }
         ]
     },
     C2: {
-        letter: '2', 
-        title: '群體 2（年齡精準行銷）', 
+        letter: '2', title: '群體 2（年齡精準行銷）', 
         subtitle: '人數：1 人 | 流失率：0.0%',
-        description: '極度穩定客群。Age 是第二重要特徵 (0.15)，代表年齡對預測很有幫助。',
+        description: '極度穩定。Age 權重 0.15，代表年齡對預測很有幫助。',
         strategy: '推薦策略：主力客群尊榮升級計畫',
         boxes: [
-            { h: '優先優惠券 (折扣)', p: '推廣 VIP 儲值卡與年齡專屬升級活動（如學生週/長輩日），加深黏著度。' },
-            { h: '口味樣品 (產品)', p: '提供 VIP 專屬福利：優先免費品嚐季節限定新產品（如高端烏龍茶）。' },
-            { h: 'SMS 提醒 (渠道)', p: '發送尊榮感十足的個人化節慶祝福或 VIP 活動邀請連結。' }
+            { h: '優先優惠券 (折扣)', p: '推廣 VIP 儲值卡與年齡專屬活動，加深黏著度。' },
+            { h: '口味樣品 (產品)', p: '提供 VIP 專屬福利：優先免費品嚐季節限定新產品。' },
+            { h: 'SMS 提醒 (渠道)', p: '發送尊榮感十足的個人化節慶祝福或活動邀請連結。' }
         ]
     }
 };
@@ -501,15 +498,10 @@ function updateDisplay() {
     const lastVisitDays = parseInt(lastVisitSlider.value);
     const appUsage = document.querySelector('input[name="app_usage"]:checked').value;
     
-    // 保持你正確的群體判定邏輯
     let segment;
-    if (lastVisitDays === 0) {
-        segment = segments.C2; 
-    } else if (lastVisitDays <= 30 && appUsage !== 'none') {
-        segment = segments.C1; 
-    } else {
-        segment = segments.C0; 
-    }
+    if (lastVisitDays === 0) { segment = segments.C2; } 
+    else if (lastVisitDays <= 30 && appUsage !== 'none') { segment = segments.C1; } 
+    else { segment = segments.C0; }
     
     if(segmentLetter) segmentLetter.textContent = segment.letter;
     if(segmentTitle) segmentTitle.textContent = segment.title;
@@ -517,7 +509,7 @@ function updateDisplay() {
     if(segmentDescription) segmentDescription.textContent = segment.description;
     if(strategyDescription) strategyDescription.textContent = segment.strategy;
     
-    // 更新風險 UI
+    // UI 顏色與流失率更新 (保持不變)
     const riskSpan = riskLevelBadge.querySelector('span:last-child');
     if (segment.letter === '2') {
         riskSpan.textContent = '極度穩定 (0.0%)';
@@ -542,7 +534,7 @@ function updateDisplay() {
         churnProbabilityValue.innerHTML = `36.8<span class="text-3xl font-light">%</span>`;
     }
 
-    // 核心修改：動態策略格更新
+    // 更新下方策略格 (加入群體 2 的優待邏輯)
     const strategyGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3');
     if (strategyGrid) {
         const h5s = strategyGrid.querySelectorAll('h5');
@@ -551,18 +543,28 @@ function updateDisplay() {
             segment.boxes.forEach((box, index) => {
                 let currentTick = '';
 
-                // 根據當前 Slider 數值同群體決定要唔要 Tick
-                if (index === 0) { // 折扣格
-                    if (lastVisitDays > 15) {
+                if (index === 0) { // 優先優惠券
+                    // 如果係群體 2，無論幾多日都打勾 (VIP)；其他群體要 > 15 日
+                    if (segment.letter === '2') {
+                        currentTick = tickCyan;
+                    } else if (lastVisitDays > 15) {
                         currentTick = (segment.letter === '0' ? tickRed : tickGreen);
                     }
-                } else if (index === 1) { // 產品格
-                    if (segment.letter === '1' || segment.letter === '2') {
-                        currentTick = (segment.letter === '2' ? tickCyan : tickGreen);
+                } 
+                else if (index === 1) { // 口味樣品
+                    // 群體 2 必有星號；群體 1 (主力) 必有綠勾；群體 0 有需要才給 (天數 > 7)
+                    if (segment.letter === '2') {
+                        currentTick = tickCyan;
+                    } else if (segment.letter === '1') {
+                        currentTick = tickGreen;
+                    } else if (lastVisitDays > 7) {
+                        currentTick = tickRed;
                     }
-                } else if (index === 2) { // 渠道格 (SMS)
+                } 
+                else if (index === 2) { // SMS 提醒
+                    // 只有真係好耐無見 (天數 > 30) 先建議用 SMS 打擾顧客
                     if (lastVisitDays > 30) {
-                        currentTick = tickRed; // 超過30天先建議發SMS
+                        currentTick = tickRed;
                     }
                 }
 

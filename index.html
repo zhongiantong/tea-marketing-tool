@@ -441,7 +441,7 @@
 </div>
 </main>
 <script>
-// 定義彩色剔號 Icon (保持視覺效果)
+// 定義彩色剔號 Icon
 const tickRed = '<span class="material-symbols-outlined thick text-[20px] text-[#FF4D4D] ml-2" style="vertical-align: middle;">check_circle</span>';
 const tickGreen = '<span class="material-symbols-outlined thick text-[20px] text-[var(--accent-primary)] ml-2" style="vertical-align: middle;">check_circle</span>';
 const tickCyan = '<span class="material-symbols-outlined thick text-[20px] text-cyan-400 ml-2" style="vertical-align: middle;">stars</span>';
@@ -453,10 +453,11 @@ const segments = {
         subtitle: '人數：114 人 | 流失率：36.8%',
         description: '這群人完全不用 APP，無法接收推播，但每月來 8 次左右，貢獻度不低。',
         strategy: '推薦策略：推出實體集點卡',
+        // 對應：折扣(優先優惠券)、產品(口味樣品)、渠道(SMS提醒)
         boxes: [
-            { h: '建議內容' + tickRed, p: '針對不用APP的傳統型顧客推出實體集點卡，讓他們也能累積點數換飲料。' },
-            { h: '數據依據' + tickRed, p: '群體0有37%流失率，比另外兩群高很多。他們完全不用APP，無法接收通知，但每月來8次左右。' },
-            { h: '預期效果' + tickRed, p: '預期這群人的流失率能降低，並透過集點卡收集消費資料做未來分析。' }
+            { h: '優先優惠券 (折扣)' + tickRed, p: '建議內容：[針對不用APP的傳統型顧客推出實體集點卡，讓他們也能累積點數換領優先優惠券。]' },
+            { h: '口味樣品 (產品)' + tickRed, p: '數據依據：群體0流失率37%偏高。他們每月來8次，建議提供季節口味樣品試飲，增加留店誘因。' },
+            { h: 'SMS 提醒 (渠道)' + tickRed, p: '預期效果：針對無APP客群，透過SMS提醒配合實體集點卡收集消費資料，預期能降低流失率。' }
         ]
     },
     C1: {
@@ -466,9 +467,9 @@ const segments = {
         description: '這是最核心的主力，需針對預測模型中顯示的關鍵特徵進行主動挽回。',
         strategy: '推薦策略：主動發送折扣券',
         boxes: [
-            { h: '建議內容' + tickGreen, p: '針對預測會流失但還沒流失的顧客，主動發送折扣券。' },
-            { h: '數據依據' + tickGreen, p: 'days_since_last_visit權重最高(0.27)。混淆矩陣漏掉9個真流失客，需在流失前挽回。' },
-            { h: '預期效果' + tickGreen, p: '如果執行，預期能降低誤判為活躍的那9個流失客的實際流失率。' }
+            { h: '優先優惠券 (折扣)' + tickGreen, p: '建議內容：[針對預測會流失但還沒流失的顧客，透過 App 主動發送優先折扣券。]' },
+            { h: '口味樣品 (產品)' + tickGreen, p: '數據依據：days_since_last_visit權重最高(0.27)。混淆矩陣漏掉9個真流失客，需靠新產品樣品配合券拉回。' },
+            { h: 'SMS 提醒 (渠道)' + tickGreen, p: '預期效果：如果執行，預期能降低誤判為活躍的那9個流失客的實際流失率。' }
         ]
     },
     C2: {
@@ -478,9 +479,9 @@ const segments = {
         description: '根據模型特徵，年齡是預測流失的第二重要因素。',
         strategy: '推薦策略：專屬年齡優惠服務',
         boxes: [
-            { h: '建議內容' + tickCyan, p: '針對不同年齡的顧客設計專屬優惠或服務，因為他們比想像中更不容易流失。' },
-            { h: '數據依據' + tickCyan, p: '特徵重要性排行顯示age是第二重要的特徵（權重0.15），對預測很有幫助。' },
-            { h: '預期效果' + tickCyan, p: '預期可以更精準地抓住不同年齡層的需求，用對方法就能讓他們更忠誠。' }
+            { h: '優先優惠券 (折扣)' + tickCyan, p: '建議內容：[針對不同年齡的顧客設計專屬優先優惠券，因為他們比想像中更不容易流失。]' },
+            { h: '口味樣品 (產品)' + tickCyan, p: '數據依據：Age權重0.15。針對不同年齡層偏好提供口味樣品，能更精準抓住客群需求。' },
+            { h: 'SMS 提醒 (渠道)' + tickCyan, p: '預期效果：用對方法（個人化SMS）就能讓不同年齡層更忠誠，維持極低流失率。' }
         ]
     }
 };
@@ -540,7 +541,7 @@ function updateDisplay() {
         churnProbabilityValue.innerHTML = `36.8<span class="text-3xl font-light">%</span>`;
     }
 
-    // 更新下方三格策略內容 (100% 照搬你的建議)
+    // 更新下方三格策略內容 (已鎖定折扣、產品、渠道分類)
     const strategyGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3');
     if (strategyGrid) {
         const h5s = strategyGrid.querySelectorAll('h5');

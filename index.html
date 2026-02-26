@@ -441,22 +441,22 @@
 </div>
 </main>
 <script>
-// Segment definitions
+// 根據你 Colab 真實跑出嚟嘅結果：0群(114人), 1群(173人), 2群(1人)
 const segments = {
-    A: {
-        letter: 'A', title: '群體 A（傳統型顧客）', subtitle: '穩定但成長緩慢',
-        description: '顧客偏好傳統消費模式，對數位工具接受度較低。',
-        strategy: '推薦策略：傳統客群專屬維護計畫'
+    C0: {
+        letter: '0', title: 'Cluster 0（活躍主力客）', subtitle: '共 114 人',
+        description: '穩定的顧客群體，近期有來消費且多數有使用App，是品牌的核心收入來源。',
+        strategy: '推薦策略：推廣 VIP 儲值與常規促銷'
     },
-    B: {
-        letter: 'B', title: '群體 B（高危流失客）', subtitle: '需要立即採取行動',
-        description: '顧客顯示強烈的脫離跡象，儘管過去有高價值消費歷史。',
-        strategy: '推薦策略：高危流失客緊急挽回計畫'
+    C1: {
+        letter: '1', title: 'Cluster 1（高危流失客）', subtitle: '共 173 人',
+        description: '佔比最大的顧客群，特徵是太久沒來或沒用App，包含大量潛在流失客，需重點關注。',
+        strategy: '推薦策略：發送喚醒簡訊與限時高折扣優惠券'
     },
-    C: {
-        letter: 'C', title: '群體 C（主力潛力客）', subtitle: '高價值成長機會',
-        description: '顧客展現高度參與與消費潛力，是品牌忠誠度培養重點。',
-        strategy: '推薦策略：主力客群尊榮升級計畫'
+    C2: {
+        letter: '2', title: 'Cluster 2（極端異常客）', subtitle: '僅 1 人 (Outlier)',
+        description: '數據顯示極端異常的單一顧客，可能是超級 VVIP 或前面階段未清乾淨的錯誤數據。',
+        strategy: '推薦策略：排除於自動化行銷外，交由人工獨立評估'
     }
 };
 
@@ -473,26 +473,25 @@ const churnProbabilityValue = document.querySelector('.text-center .text-7xl');
 const churnProbabilityBar = document.querySelector('.h-full.bg-gradient-to-r');
 const riskLevelBadge = document.querySelector('.flex.items-center.gap-2.px-3.py-1.rounded-full');
 
-// Update display values (終極動態策略版)
+// Update display values (終極真實數據版)
 function updateDisplay() {
     const lastVisitDays = parseInt(lastVisitSlider.value);
     const appUsage = document.querySelector('input[name="app_usage"]:checked').value;
     const couponRedeemed = couponToggle.checked;
     
-    // 1. 判斷群體 (A/B/C) - 修正後的合理邏輯
+    // 1. 判斷群體 (Cluster 0, 1, 2)
     let segment;
-    
-    // 條件 1：只要太久沒來 (例如大於等於 40 天)，不管是誰，都是「高危流失客 B」
-    if (lastVisitDays >= 40) {
-        segment = segments.B; 
+    // 假設拉桿拉到極端值 (大於80天)，模擬找出那個唯一的 Outlier (Cluster 2)
+    if (lastVisitDays >= 80) {
+        segment = segments.C2; 
     } 
-    // 條件 2：近期有來 (<40天)，而且「有使用 APP」，就是「主力潛力客 C」 (不管有沒有兌換優惠券)
-    else if (appUsage === 'installed') {
-        segment = segments.C; 
+    // 超過 30 天沒來，或者沒有用 APP，歸類為最大群、最高危的 Cluster 1 (173人)
+    else if (lastVisitDays > 30 || appUsage === 'none') {
+        segment = segments.C1; 
     } 
-    // 條件 3：近期有來 (<40天)，但是「無 APP」，就是「傳統型顧客 A」
+    // 近期有來且有裝 APP，歸類為最穩定的 Cluster 0 (114人)
     else {
-        segment = segments.A; 
+        segment = segments.C0; 
     }
     
     // 2. 更新左側群體顯示
@@ -537,7 +536,7 @@ function updateDisplay() {
         lastVisitDisplay.textContent = `${lastVisitDays}d`;
     }
 
-    // 4. 更新三個推薦策略框框 (動態優惠內容 + 條件打勾)
+    // 4. 更新三個推薦策略框框
     const strategyGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3');
     if (strategyGrid) {
         const h5s = strategyGrid.querySelectorAll('h5');
@@ -548,27 +547,25 @@ function updateDisplay() {
 
         if (h5s.length >= 3 && ps.length >= 3) {
             
-            // 框框 1：專屬優惠
-            if (segment.letter === 'A') {
-                // 流失率大於80%給紅勾急救，平時給綠勾當作常規推薦
-                h5s[0].innerHTML = '實體集點卡' + (churnProbability > 80 ? redCheck : greenCheck);
-                ps[0].textContent = '推出實體集點卡，讓傳統顧客也能累積點數換飲料。';
-            } else if (segment.letter === 'B') {
-                // 流失率大於80%給紅勾急救，平時給綠勾當作常規推薦
+            // 框框 1：依據 0, 1, 2 群給予不同策略
+            if (segment.letter === '0') {
+                h5s[0].innerHTML = 'VIP 專屬升級' + greenCheck;
+                ps[0].textContent = '對 114 位主力客推廣 VIP 儲值卡與專屬升級活動。';
+            } else if (segment.letter === '1') {
                 h5s[0].innerHTML = '高折扣優惠券' + (churnProbability > 80 ? redCheck : greenCheck);
-                ps[0].textContent = '發送限時、高折扣的促銷優惠券喚醒消費。';
-            } else if (segment.letter === 'C') {
-                h5s[0].innerHTML = 'VIP 儲值與升級' + greenCheck;
-                ps[0].textContent = '推廣 VIP 儲值卡與專屬升級活動，加深粉絲黏著度。';
+                ps[0].textContent = '針對 173 位高危險客發送限時、高折扣促銷喚醒消費。';
+            } else if (segment.letter === '2') {
+                h5s[0].innerHTML = '人工特別處理' + redCheck;
+                ps[0].textContent = '此為極端值 (1人)，需交由客服一對一聯繫或檢查數據。';
             }
 
-            // 框框 2：口味樣品 (C群專屬飲料)
-            h5s[1].innerHTML = '口味樣品' + (segment.letter === 'C' ? greenCheck : '');
-            ps[1].innerHTML = segment.letter === 'C' ? '<span class="text-[var(--accent-primary)] font-bold">✅ 專屬福利：提供免費飲料</span>' : '免費品嚐季節限定烏龍茶。';
+            // 框框 2：口味樣品 (只給 Cluster 0)
+            h5s[1].innerHTML = '口味樣品' + (segment.letter === '0' ? greenCheck : '');
+            ps[1].innerHTML = segment.letter === '0' ? '<span class="text-[var(--accent-primary)] font-bold">✅ 專屬福利：提供免費飲料</span>' : '免費品嚐季節限定烏龍茶。';
 
-            // 框框 3：SMS 提醒 (≥40天危險預警)
+            // 框框 3：SMS 提醒 (危險預警)
             h5s[2].innerHTML = 'SMS 提醒' + (lastVisitDays >= 40 ? redCheck : '');
-            ps[2].textContent = '個人化「我們想念您」簡訊附帶連結。';
+            ps[2].textContent = '個人化「我們想念您」簡訊附帶專屬回歸連結。';
         }
     }
 }
